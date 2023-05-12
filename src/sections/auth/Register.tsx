@@ -15,15 +15,11 @@ import AuthRegisterForm from './AuthRegisterForm';
 export default function Register() {
   return (
     <LoginLayout title="Manage the job more effectively with Minimal">
-      <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-        <Typography variant="h4">Get started absolutely free.</Typography>
+      <Stack spacing={2} sx={{ mb: 2, position: 'relative' }}>
+        <Typography variant="h4">Login</Typography>
 
         <Stack direction="row" spacing={0.5}>
-          <Typography variant="body2"> Already have an account? </Typography>
-
-          <Link component={NextLink} href={PATH_AUTH.login} variant="subtitle2">
-            Sign in
-          </Link>
+          <Typography variant="body2"> Get access to your Orders, Wishlist and Recommendations </Typography>
         </Stack>
       </Stack>
 
@@ -44,7 +40,6 @@ export default function Register() {
         .
       </Typography>
 
-      <AuthWithSocial />
     </LoginLayout>
   );
 }

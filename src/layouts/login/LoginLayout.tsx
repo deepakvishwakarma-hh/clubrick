@@ -35,7 +35,7 @@ export default function LoginLayout({ children, illustration, title }: Props) {
           disabledEffect
           visibleByDefault
           alt="auth"
-          src={illustration || '/assets/illustrations/illustration_dashboard.png'}
+          src={illustration || 'https://img.freepik.com/free-vector/social-media-marketing-mobile-phone-concept_23-2148431747.jpg?w=826&t=st=1683476718~exp=1683477318~hmac=ffcc58f29756e4528c1d6ce971b16d4ebd2d30f63b8ac27037479c39ca7a3d3c'}
           sx={{ maxWidth: 720 }}
         />
 

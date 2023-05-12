@@ -1,10 +1,11 @@
+import axios from 'axios';
 import { useState } from 'react';
 import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, IconButton, InputAdornment, Alert } from '@mui/material';
+import { Stack, IconButton, InputAdornment, Alert, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -12,7 +13,16 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 
+
+
 // ----------------------------------------------------------------------
+
+
+const generateOtp = (mobileNumber: string) => {
+  const url = `'https://www.fast2sms.com/dev/bulkV2?authorization=3ZA8rIBQjwYDGaXF6VvuTbpJNcPi45LqRMtCK7smEOxlH92UgSAwZRJKyosrGFhYCf1W72cMxBQdXjTt&variables_values=5599&route=otp&numbers=7354657459,8889737792'`;
+
+  return axios.post(url);
+}
 
 type FormValuesProps = {
   email: string;
@@ -54,33 +64,61 @@ export default function AuthRegisterForm() {
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
-    try {
-      if (register) {
-        await register(data.email, data.password, data.firstName, data.lastName);
-      }
-    } catch (error) {
-      console.error(error);
-      reset();
-      setError('afterSubmit', {
-        ...error,
-        message: error.message || error,
-      });
-    }
+    // try {
+    //   if (register) {
+    //     await register(data.email, data.password, data.firstName, data.lastName);
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   reset();
+    //   setError('afterSubmit', {
+    //     ...error,
+    //     message: error.message || error,
+    //   });
+    // }
+
+
+
   };
 
+
+
+
+  const [number, setNumber] = useState('')
+
+
+  const handleSubmiter = (event: any) => {
+    event.preventDefault()
+    if (number.length === 10) {
+      console.log(generateOtp(number))
+    }
+  }
+
+
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmiter as any}>
       <Stack spacing={2.5}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+        {/* <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <RHFTextField name="firstName" label="First name" />
           <RHFTextField name="lastName" label="Last name" />
-        </Stack>
+        </Stack> */}
 
-        <RHFTextField name="email" label="Email address" />
+        {/* <RHFTextField type='number' name="Phone" label="Phone Number" placeholder='+91 987654321' /> */}
 
-        <RHFTextField
+
+        <TextField
+          type='number' name="Phone" label="Phone Number" placeholder='+91 987654321'
+          onChange={(event) => {
+            setNumber(event.target.value)
+          }}
+
+          value={number}
+        />
+
+
+        {/* <RHFTextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
@@ -93,7 +131,7 @@ export default function AuthRegisterForm() {
               </InputAdornment>
             ),
           }}
-        />
+        /> */}
 
         <LoadingButton
           fullWidth
@@ -101,6 +139,11 @@ export default function AuthRegisterForm() {
           size="large"
           type="submit"
           variant="contained"
+          onClick={() => {
+
+            // axios.get('https://www.fast2sms.com/dev/bulkV2?authorization=3ZA8rIBQjwYDGaXF6VvuTbpJNcPi45LqRMtCK7smEOxlH92UgSAwZRJKyosrGFhYCf1W72cMxBQdXjTt&variables_values=5599&route=otp&numbers=917354657459,8888888888,7777777777')
+
+          }}
           loading={isSubmitting || isSubmitSuccessful}
           sx={{
             bgcolor: 'text.primary',
@@ -111,9 +154,12 @@ export default function AuthRegisterForm() {
             },
           }}
         >
-          Create account
+          Send OTP
         </LoadingButton>
       </Stack>
-    </FormProvider>
+    </FormProvider >
   );
 }
+
+
+
