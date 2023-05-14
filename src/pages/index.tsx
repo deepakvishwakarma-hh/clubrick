@@ -1,7 +1,7 @@
 // next
 import Head from 'next/head';
 // @mui
-import { Box } from '@mui/material';
+import { Box, Button, } from '@mui/material';
 // layouts
 import MainLayout from '../layouts/main';
 // components
@@ -19,6 +19,7 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
+import { signOut, useSession } from 'next-auth/react';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,8 @@ HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLay
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
+  const {data:session} = useSession()
+  console.log(session)
   return (
     <>
       <Head>
@@ -35,6 +38,7 @@ export default function HomePage() {
 
       <ScrollProgress />
 
+  
       <HomeHero />
 
       <Box
@@ -45,7 +49,9 @@ export default function HomePage() {
         }}
       >
         <HomeMinimal />
-
+        <Button variant="contained" onClick={()=>signOut()}>
+            SignOut
+          </Button>
         <HomeHugePackElements />
 
         <HomeForDesigner />

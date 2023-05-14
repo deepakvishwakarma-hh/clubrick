@@ -16,7 +16,7 @@ export default function Register() {
   return (
     <LoginLayout title="Manage the job more effectively with Minimal">
       <Stack spacing={2} sx={{ mb: 2, position: 'relative' }}>
-        <Typography variant="h4">Login</Typography>
+        <Typography variant="h4">Register</Typography>
 
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2"> Get access to your Orders, Wishlist and Recommendations </Typography>

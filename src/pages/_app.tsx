@@ -48,11 +48,12 @@ import ProgressBar from '../components/progress-bar';
 import SnackbarProvider from '../components/snackbar';
 import { MotionLazyContainer } from '../components/animate';
 import { ThemeSettings, SettingsProvider } from '../components/settings';
-
+import { SessionProvider } from "next-auth/react";
 // Check our docs
 // https://docs.minimals.cc/authentication/ts-version
-
+import { type Session } from "next-auth";
 import { AuthProvider } from '../auth/JwtContext';
+import { api } from '~/utils/api';
 // import { AuthProvider } from '../auth/Auth0Context';
 // import { AuthProvider } from '../auth/FirebaseContext';
 // import { AuthProvider } from '../auth/AwsCognitoContext';
@@ -68,10 +69,10 @@ type NextPageWithLayout = NextPage & {
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
   Component: NextPageWithLayout;
+  session: Session | null 
 }
-
-export default function MyApp(props: MyAppProps) {
-  const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
+ function MyApp(props: MyAppProps) {
+  const { Component, pageProps, emotionCache = clientSideEmotionCache ,  pageProps: session, } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -80,7 +81,7 @@ export default function MyApp(props: MyAppProps) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-
+          <SessionProvider session={session}>
       <AuthProvider>
         <ReduxProvider store={store}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -102,6 +103,9 @@ export default function MyApp(props: MyAppProps) {
           </LocalizationProvider>
         </ReduxProvider>
       </AuthProvider>
+      </SessionProvider>
     </CacheProvider>
   );
 }
+
+export default api.withTRPC(MyApp);

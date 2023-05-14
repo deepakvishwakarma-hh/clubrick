@@ -1,7 +1,7 @@
 // next
 import NextLink from 'next/link';
 // @mui
-import { Alert, Tooltip, Stack, Typography, Link, Box } from '@mui/material';
+import { Alert, Tooltip, Stack, Typography, Link, Box, Button } from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // layouts
@@ -11,6 +11,7 @@ import { PATH_AUTH } from '../../routes/paths';
 //
 import AuthLoginForm from './AuthLoginForm';
 import AuthWithSocial from './AuthWithSocial';
+import { sendOtp,  } from 'src/utils/fast2sms';
 
 // ----------------------------------------------------------------------
 
@@ -24,10 +25,10 @@ export default function Login() {
 
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2">New user?</Typography>
-
-          <Link component={NextLink} href={PATH_AUTH.register} variant="subtitle2">
+    <Button onClick={async ()=>await  sendOtp(8766203976,3332)}>Send Sms</Button>
+          {/* <Link component={NextLink} href={PATH_AUTH.register} variant="subtitle2">
             Create an account
-          </Link>
+          </Link> */}
         </Stack>
 
         <Tooltip title={method} placement="left">

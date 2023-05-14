@@ -15,6 +15,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import { loginUserClientSide } from '~/features/authentication/services/login_user';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ export default function AuthLoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    email: Yup.string().required('String is required'),
     password: Yup.string().required('Password is required'),
   });
 
@@ -53,7 +54,7 @@ export default function AuthLoginForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await login(data.email, data.password);
+      await loginUserClientSide({identifier:data.email,password:data.password})
     } catch (error) {
       console.log(error);
       reset();
