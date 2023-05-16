@@ -20,6 +20,7 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 
 // firebase 
 import { app } from '../../../firebase/firebase.config'
+import { useRouter } from 'next/router';
 
 const auth = getAuth(app)
 
@@ -35,6 +36,7 @@ type FormValuesProps = {
 };
 
 export default function AuthRegisterForm() {
+  const router = useRouter()
   const { mutate } = api.auth.register.useMutation()
   const { register } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
@@ -70,6 +72,12 @@ export default function AuthRegisterForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
+      router.push({
+        pathname: router.pathname, query: {
+          otpValidation: true,
+          mobileNumber: data.phone
+        }
+      })
       mutate(data, {
         onError(error: any) {
           console.error("Mutation failed:", error?.message);
@@ -161,8 +169,7 @@ export default function AuthRegisterForm() {
           Register
         </LoadingButton>
 
-
-        <button type="button" onClick={handleSendOTP} >send otp</button>
+        <div id="recaptcha" />
 
       </Stack>
     </FormProvider >

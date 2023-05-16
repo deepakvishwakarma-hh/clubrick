@@ -10,28 +10,30 @@ import { PATH_AUTH } from '../../routes/paths';
 //
 import AuthWithSocial from './AuthWithSocial';
 import AuthRegisterForm from './AuthRegisterForm';
-
+import OtpValidation from './OtpValidation';
+import { useRouter } from 'next/router';
 
 
 
 // ----------------------------------------------------------------------
 
 export default function Register() {
+  const router = useRouter()
 
+  const [registerState, setState] = useState(false)
 
-  const [visiblity, setVisiblity] = useState(false)
 
   return (
     <LoginLayout title="Manage the job more effectively with Minimal">
       <Stack spacing={2} sx={{ mb: 2, position: 'relative' }}>
-        <Typography variant="h4">Register</Typography>
+        <Typography variant="h4">Register </Typography>
 
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2"> Get access to your Orders, Wishlist and Recommendations </Typography>
         </Stack>
       </Stack>
 
-      <AuthRegisterForm />
+      {router.query.otpValidation ? <OtpValidation /> : <AuthRegisterForm />}
 
       <Typography
         component="div"
