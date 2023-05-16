@@ -225,9 +225,18 @@ export default function HomePage() {
                     <Grid item xs={3} sx={{}} >
 
                         <Typography sx={{ pt: 2 }} variant="h3" noWrap gutterBottom>
-                            Shoes
+                            Shoes Store
                         </Typography>
-                        <Button variant='soft'>See all products</Button>
+
+                        <Typography sx={{ mb: 2 }} variant="body1" gutterBottom>
+
+                            A shoe store is a retail establishment that specializes in selling various types of footwear for men, women, and children.
+
+
+                        </Typography>
+
+
+                        <Button sx={{ mt: 2 }} variant='soft'>See all products</Button>
 
                     </Grid>
                     <Grid item xs={9}>
@@ -262,7 +271,7 @@ export default function HomePage() {
                     <Grid item xs={3} sx={{}} >
 
                         <Typography sx={{ pt: 2 }} variant="h3" noWrap gutterBottom>
-                            Speakers
+                            Speakers Store
                         </Typography>
                         <Button variant='soft'>See all products</Button>
 
