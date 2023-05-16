@@ -47,7 +47,7 @@ export default function CategoryCard({ name, href, cover }: any) {
                 </Box>
 
                 <Stack spacing={1} sx={{ px: 3, pb: 1, 'textTransform': 'capitalize' }}>
-                    {name}
+                    {name} Store
                 </Stack>
             </Card>
         </Link>
