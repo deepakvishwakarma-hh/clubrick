@@ -82,8 +82,8 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
   const { image, title } = item;
 
   return (
-    <Paper sx={{ position: 'relative' }}>
-      <Image alt={title} src={image} ratio="16/9" />
+    <Paper sx={{ position: 'relative', height: '400px' }}>
+      <Image sx={{ height: '400px' }} alt={title} src={image} />
 
       <Box
         sx={{
@@ -93,7 +93,7 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
           position: 'absolute',
           ...bgGradient({
             direction: 'to top',
-            startColor: `${theme.palette.grey[900]} 0%`,
+            startColor: `${theme.palette.grey[600]} 0%`,
             endColor: `${alpha(theme.palette.grey[900], 0)} 100%`,
           }),
         }}

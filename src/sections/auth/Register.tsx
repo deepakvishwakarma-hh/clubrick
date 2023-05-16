@@ -1,3 +1,4 @@
+import { useState } from 'react';
 // next
 import NextLink from 'next/link';
 // @mui
@@ -10,9 +11,16 @@ import { PATH_AUTH } from '../../routes/paths';
 import AuthWithSocial from './AuthWithSocial';
 import AuthRegisterForm from './AuthRegisterForm';
 
+
+
+
 // ----------------------------------------------------------------------
 
 export default function Register() {
+
+
+  const [visiblity, setVisiblity] = useState(false)
+
   return (
     <LoginLayout title="Manage the job more effectively with Minimal">
       <Stack spacing={2} sx={{ mb: 2, position: 'relative' }}>

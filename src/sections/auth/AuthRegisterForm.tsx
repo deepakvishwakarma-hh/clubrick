@@ -1,4 +1,6 @@
+
 import axios from 'axios';
+import { api } from '~/utils/api';
 import { useState } from 'react';
 import * as Yup from 'yup';
 // form
@@ -8,38 +10,33 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, IconButton, InputAdornment, Alert, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // auth
+import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
+import { loginUserClientSide } from '~/features/authentication/services/login_user';
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
-import { api } from '~/utils/api';
-import { createUser } from '~/features/authentication/services/register';
-import { loginUserClientSide } from '~/features/authentication/services/login_user';
 
 
+// firebase 
+import { app } from '../../../firebase/firebase.config'
+
+const auth = getAuth(app)
 
 // ----------------------------------------------------------------------
-
-
-const generateOtp = (mobileNumber: string) => {
-  const url = `'https://www.fast2sms.com/dev/bulkV2?authorization=3ZA8rIBQjwYDGaXF6VvuTbpJNcPi45LqRMtCK7smEOxlH92UgSAwZRJKyosrGFhYCf1W72cMxBQdXjTt&variables_values=5599&route=otp&numbers=7354657459,8889737792'`;
-
-  return axios.post(url);
-}
 
 type FormValuesProps = {
   email: string;
   password: string;
   firstName: string;
   lastName?: string;
-  phone:string;
+  phone: string;
   afterSubmit?: string;
 };
 
 export default function AuthRegisterForm() {
-  const {mutate} = api.auth.register.useMutation()
+  const { mutate } = api.auth.register.useMutation()
   const { register } = useAuthContext();
-
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
@@ -55,7 +52,7 @@ export default function AuthRegisterForm() {
     lastName: '',
     email: '',
     password: '',
-    phone:""
+    phone: ""
   };
 
   const methods = useForm<FormValuesProps>({
@@ -68,25 +65,20 @@ export default function AuthRegisterForm() {
     setError,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful, },
-    
+
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      // createUser(data)
-      void mutate(data,
-         {
-        onError(error) {
-         
+      mutate(data, {
+        onError(error: any) {
           console.error("Mutation failed:", error?.message);
         },
-        onSuccess(data) {
-          void loginUserClientSide({
-            identifier: data.user.email as string,
-            password: data.password,
+        onSuccess(data1: any) {
+          loginUserClientSide({
+            identifier: data1.user.email as string,
+            password: data1.password,
           });
-          console.log(data);
-      
         },
       }
       )
@@ -98,7 +90,11 @@ export default function AuthRegisterForm() {
         message: error.message || error,
       });
     }
-  };
+  }
+
+
+
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit) as any} >
       <Stack spacing={2.5}>
@@ -138,7 +134,10 @@ export default function AuthRegisterForm() {
           }}
         />
 
+        <div id="recaptcha-container" />
+
         <LoadingButton
+          id='sign-in-button'
           fullWidth
           color="inherit"
           size="large"
@@ -149,7 +148,7 @@ export default function AuthRegisterForm() {
             // axios.get('https://www.fast2sms.com/dev/bulkV2?authorization=3ZA8rIBQjwYDGaXF6VvuTbpJNcPi45LqRMtCK7smEOxlH92UgSAwZRJKyosrGFhYCf1W72cMxBQdXjTt&variables_values=5599&route=otp&numbers=917354657459,8888888888,7777777777')
 
           }}
-          // loading={isSubmitting || isSubmitSuccessful}
+          loading={isSubmitting || isSubmitSuccessful}
           sx={{
             bgcolor: 'text.primary',
             color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
@@ -161,6 +160,10 @@ export default function AuthRegisterForm() {
         >
           Register
         </LoadingButton>
+
+
+        <button type="button" onClick={handleSendOTP} >send otp</button>
+
       </Stack>
     </FormProvider >
   );

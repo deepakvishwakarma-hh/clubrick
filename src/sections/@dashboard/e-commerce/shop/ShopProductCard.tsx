@@ -21,7 +21,7 @@ import { ColorPreview } from '../../../../components/color-utils';
 // ----------------------------------------------------------------------
 
 type Props = {
-  product: IProduct;
+  product: any;
 };
 
 export default function ShopProductCard({ product }: Props) {

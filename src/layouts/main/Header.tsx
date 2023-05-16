@@ -1,6 +1,7 @@
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Box, Button, AppBar, Toolbar, Container, Link, BoxProps } from '@mui/material';
+import Iconify from '~/components/iconify/Iconify';
+import { Box, AppBar, Toolbar, Container, BoxProps, IconButton, Stack } from '@mui/material';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 import useResponsive from '../../hooks/useResponsive';
@@ -8,17 +9,14 @@ import useResponsive from '../../hooks/useResponsive';
 import { bgBlur } from '../../utils/cssStyles';
 // config
 import { HEADER } from '../../config-global';
-// routes
-import { PATH_DOCS, PATH_MINIMAL_ON_STORE } from '../../routes/paths';
 // components
 import Logo from '../../components/logo';
-import Label from '../../components/label';
 //
 import NavMobile from './nav/mobile';
 import navConfig from './nav/config-navigation';
-import NavDesktop from './nav/desktop';
-
 // ----------------------------------------------------------------------
+
+import AccountPopover from '../dashboard/header/AccountPopover';
 
 export default function Header() {
   const theme = useTheme();
@@ -28,7 +26,7 @@ export default function Header() {
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
 
   return (
-    <AppBar color="transparent" sx={{ boxShadow: 0 }}>
+    <AppBar color="transparent" sx={{ boxShadow: 1, }}>
       <Toolbar
         disableGutters
         sx={{
@@ -49,27 +47,35 @@ export default function Header() {
         }}
       >
         <Container sx={{ height: 1, display: 'flex', alignItems: 'center' }}>
-          <Logo />
+          <Logo sx={{ mr: 3 }} />
 
-          <Link
-            href={PATH_DOCS.changelog}
-            target="_blank"
-            rel="noopener"
-            underline="none"
-            sx={{ ml: 1 }}
-          >
-            <Label color="info"> v4.3.0 </Label>
-          </Link>
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {isDesktop && <NavDesktop isOffset={isOffset} data={navConfig} />}
-
-          <Button variant="contained" target="_blank" rel="noopener" href={PATH_MINIMAL_ON_STORE}>
-            Purchase Now
-          </Button>
 
           {!isDesktop && <NavMobile isOffset={isOffset} data={navConfig} />}
+
+          <Stack
+            spacing={1}
+            direction="row"
+            justifyContent={{ xs: 'center', md: 'flex-start' }}
+            sx={{
+              mt: 0,
+              mr: { xs: 5, md: 2 },
+            }}
+          >
+            <IconButton sx={{ color: 'GrayText' }}>
+              <Iconify width={25} icon="mingcute:search-3-line" />
+            </IconButton>
+
+
+            <IconButton sx={{ color: 'GrayText' }}>
+              <Iconify width={25} icon="ph:shopping-cart-simple-bold" />
+            </IconButton>
+          </Stack>
+
+
+          <AccountPopover />
         </Container>
       </Toolbar>
 

@@ -65,7 +65,7 @@ export const AuthContext = createContext<FirebaseContextType | null>(null);
 
 const firebaseApp = initializeApp(FIREBASE_API);
 
-const AUTH = getAuth(firebaseApp);
+export const AUTH = getAuth(firebaseApp);
 
 const DB = getFirestore(firebaseApp);
 
