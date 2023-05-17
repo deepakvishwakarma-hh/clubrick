@@ -4,14 +4,7 @@ type UpdateUserT = {
   username?: string | undefined;
   firstname?: string | undefined;
   lastname?: string | undefined;
-  education?:
-    | {
-        school?: string | undefined;
-        year?: any;
-      }
-    | undefined;
-  bio?: string | undefined;
-  work?: {} | undefined;
+  otp_verification_state?:boolean
 };
 
 export { UpdateUserT };

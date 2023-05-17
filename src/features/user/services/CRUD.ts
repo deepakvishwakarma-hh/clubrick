@@ -47,10 +47,7 @@ export const updateUser = async ({
   id: number;
 }) => {
   try {
-    if (data.education?.year) {
-      let year = data.education.year.getFullYear();
-      data.education.year = year;
-    }
+   
     const updatedUser = await strapi.axios.put(`users/${id}`, data);
     return updatedUser.data;
   } catch (error) {

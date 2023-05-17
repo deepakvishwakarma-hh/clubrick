@@ -72,12 +72,7 @@ export default function AuthRegisterForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      router.push({
-        pathname: router.pathname, query: {
-          otpValidation: true,
-          mobileNumber: data.phone
-        }
-      })
+      // 
       mutate(data, {
         onError(error: any) {
           console.error("Mutation failed:", error?.message);
@@ -86,6 +81,7 @@ export default function AuthRegisterForm() {
           loginUserClientSide({
             identifier: data1.user.email as string,
             password: data1.password,
+            path:`${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`
           });
         },
       }

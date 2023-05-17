@@ -63,16 +63,7 @@ export const userRouter = createTRPCRouter({
             year: z.date().optional(),
           })
           .optional(),
-        bio: z.string().optional(),
-        professional_qualifications: z.any().optional(),
-        alchoholic_interests: z.any().optional(),
-        work: z
-          .object({
-            job_title: z.string().optional(),
-            company_name: z.string().optional(),
-            start_date: z.date().optional(),
-          })
-          .optional(),
+          otp_verification_state:z.boolean().optional()
       })
     )
     .mutation(async ({ input, ctx }) => {

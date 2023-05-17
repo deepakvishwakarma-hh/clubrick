@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { api } from '~/utils/api';
+import { useSession } from 'next-auth/react';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,7 +26,9 @@ const auth = getAuth(app)
 // Import the functions you need from the SDKs you need
 
 const App = () => {
-
+  const {data} = useSession()
+  console.log(data)
+  const {mutate} = api.user.updateUser.useMutation()
   const [phone, setPhone] = useState('+918766203976');
   const [hasFilled, setHasFilled] = useState(false);
   const [otp, setOtp] = useState('');
@@ -76,35 +80,39 @@ const App = () => {
       });
     }
   }
-
-  if (!hasFilled) {
     return (
-      <div className='app__container'>
-        <Card sx={{ width: '300px' }}>
-          <CardContent sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <Typography sx={{ padding: '20px' }} variant='h5' component='div'>Enter your phone number</Typography>
-            <form onSubmit={handleSend}>
-              <TextField sx={{ width: '240px' }} variant='outlined' autoComplete='off' label='Phone Number' value={phone} onChange={(event) => setPhone(event.target.value)} />
-              <Button type='submit' variant='contained' sx={{ width: '240px', marginTop: '20px' }}>Send Code</Button>
-            </form>
-          </CardContent>
-        </Card>
-        <div id="recaptcha"></div>
+      <div> 
+        <button onClick={()=> mutate({otp_verification_state:true})}>Update user</button>
       </div>
     )
-  } else {
-    return (
-      <div className='app__container'>
-        <Card sx={{ width: '300px' }}>
-          <CardContent sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <Typography sx={{ padding: '20px' }} variant='h5' component='div'>Enter the OTP</Typography>
-            <TextField sx={{ width: '240px' }} variant='outlined' label='OTP ' value={otp} onChange={verifyOtp} />
-          </CardContent>
-        </Card>
-        <div id="recaptcha"></div>
-      </div>
-    )
-  }
+  // if (!hasFilled) {
+  //   return (
+  //     <div className='app__container'>
+  //       <Card sx={{ width: '300px' }}>
+  //         <CardContent sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+  //           <Typography sx={{ padding: '20px' }} variant='h5' component='div'>Enter your phone number</Typography>
+  //           <form onSubmit={handleSend}>
+  //             <TextField sx={{ width: '240px' }} variant='outlined' autoComplete='off' label='Phone Number' value={phone} onChange={(event) => setPhone(event.target.value)} />
+  //             <Button type='submit' variant='contained' sx={{ width: '240px', marginTop: '20px' }}>Send Code</Button>
+  //           </form>
+  //         </CardContent>
+  //       </Card>
+  //       <div id="recaptcha"></div>
+  //     </div>
+  //   )
+  // } else {
+  //   return (
+  //     <div className='app__container'>
+  //       <Card sx={{ width: '300px' }}>
+  //         <CardContent sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+  //           <Typography sx={{ padding: '20px' }} variant='h5' component='div'>Enter the OTP</Typography>
+  //           <TextField sx={{ width: '240px' }} variant='outlined' label='OTP ' value={otp} onChange={verifyOtp} />
+  //         </CardContent>
+  //       </Card>
+  //       <div id="recaptcha"></div>
+  //     </div>
+  //   )
+  // }
 }
 
 export default App;

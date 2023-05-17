@@ -11,13 +11,15 @@ import { Stack, IconButton, InputAdornment, Alert, TextField } from '@mui/materi
 import { LoadingButton } from '@mui/lab';
 import { initializeApp } from "firebase/app";
 // auth
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
 import { loginUserClientSide } from '~/features/authentication/services/login_user';
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import { useSession } from 'next-auth/react';
+import { MuiTelInput } from 'mui-tel-input';
 
 
 // firebase 
@@ -47,9 +49,13 @@ type FormValuesProps = {
 };
 
 export default function OtpValidation() {
+    const {data:session} = useSession()
+    const {mutate} = api.user.updateUser.useMutation()
     const router = useRouter()
     const [hasFilled, setHasFilled] = useState(false);
-    const [otp, setOtp] = useState('');
+    const [phone, setPhone] = useState(`+91${router.query.mobileNumber}`);
+    console.log({phone})
+    const [otp, setOtp] = useState("");
 
     const [loading, setLoading] = useState(false)
 
@@ -72,10 +78,11 @@ export default function OtpValidation() {
         setLoading(true)
         generateRecaptcha();
         let appVerifier = window.recaptchaVerifier;
-        signInWithPhoneNumber(auth, `+${router.query.mobileNumber}`, appVerifier)
+        signInWithPhoneNumber(auth, `+${phone}`, appVerifier)
             .then((confirmationResult) => {
                 console.log("Sms Send Confirmation", confirmationResult)
                 window.confirmationResult = confirmationResult;
+                
                 setHasFilled(true)
                 setLoading(false)
 
@@ -97,7 +104,8 @@ export default function OtpValidation() {
                 setLoading(false)
                 let user = result.user;
                 console.log(user);
-                alert('User signed in successfully');
+                mutate({otp_verification_state:true})
+                router.push("/")
                 // ...
             }).catch((error) => {
                 setLoading(false)
@@ -113,7 +121,7 @@ export default function OtpValidation() {
     if (!hasFilled) {
         return (
             <Stack spacing={2.5}>
-                <TextField aria-readonly value={router.query.mobileNumber} type='number' name="mobile" label="Mobile" placeholder='Mobile' />
+                <MuiTelInput value={phone} onChange={setPhone}  />
 
                 <LoadingButton
                     id='sign-in-button'
