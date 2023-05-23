@@ -36,8 +36,8 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: '',
+    password: '',
   };
 
   const methods = useForm<FormValuesProps>({
@@ -54,7 +54,7 @@ export default function AuthLoginForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await loginUserClientSide({identifier:data.email,password:data.password})
+      await loginUserClientSide({ identifier: data.email, password: data.password })
     } catch (error) {
       console.log(error);
       reset();
@@ -70,7 +70,7 @@ export default function AuthLoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Mobile Number" />
 
         <RHFTextField
           name="password"
