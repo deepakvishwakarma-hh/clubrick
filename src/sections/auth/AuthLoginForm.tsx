@@ -16,6 +16,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { loginUserClientSide } from '~/features/authentication/services/login_user';
+import { truncate } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -31,12 +32,15 @@ export default function AuthLoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('String is required'),
+    phone: Yup.string()
+    .required('Phone number is required')
+    .matches(/^91\d{10}$/, 'Phone number must start with 91 and have 10 digits')
+  ,
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: '',
+    phone: '91',
     password: '',
   };
 
@@ -49,20 +53,20 @@ export default function AuthLoginForm() {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    
+    formState: { errors, isSubmitting, isSubmitSuccessful,isSubmitted ,},
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
-    try {
-      await loginUserClientSide({ identifier: data.email, password: data.password })
-    } catch (error) {
-      console.log(error);
-      reset();
+    console.log(data)
+    // @ts-ignore
+     const res =  await loginUserClientSide({ identifier: data.phone, password: data.password })
+     if(res?.error){
+      // reset();
       setError('afterSubmit', {
-        ...error,
-        message: error.message || error,
+        message:  res.error,
       });
-    }
+     }
   };
 
   return (
@@ -70,7 +74,7 @@ export default function AuthLoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Mobile Number" />
+        <RHFTextField name="phone" label="Mobile Number" />
 
         <RHFTextField
           name="password"
@@ -106,7 +110,7 @@ export default function AuthLoginForm() {
         size="large"
         type="submit"
         variant="contained"
-        loading={isSubmitSuccessful || isSubmitting}
+        loading={isSubmitting}
         sx={{
           bgcolor: 'text.primary',
           color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),

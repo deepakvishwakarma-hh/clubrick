@@ -20,6 +20,7 @@ import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { useSession } from 'next-auth/react';
 import { MuiTelInput } from 'mui-tel-input';
+import { StringNullableChain } from 'lodash';
 
 
 // firebase 
@@ -47,13 +48,16 @@ type FormValuesProps = {
     phone: string;
     afterSubmit?: string;
 };
-
+function remove91FromString(str:string) {
+    const result = str.replace(/^91/, '');
+    return result;
+  }
 export default function OtpValidation() {
     const { data: session } = useSession()
     const { mutate } = api.user.updateUser.useMutation()
     const router = useRouter()
     const [hasFilled, setHasFilled] = useState(false);
-    const [phone, setPhone] = useState(`+91${router.query.mobileNumber}`);
+    const [phone, setPhone] = useState(`+91${remove91FromString(router.query.mobileNumber as string)}`);
     console.log({ phone })
     const [otp, setOtp] = useState("");
 

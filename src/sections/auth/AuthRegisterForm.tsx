@@ -43,7 +43,9 @@ export default function AuthRegisterForm() {
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    phone: Yup.string().matches(/^\+?\d{10,14}$/, 'Phone number is not valid'),
+    phone: Yup.string()
+    .required('Phone number is required')
+    .matches(/^91\d{10}$/, 'Phone number must start with 91 and have 10 digits'),
     password: Yup.string().required('Password is required'),
   });
 
@@ -52,7 +54,7 @@ export default function AuthRegisterForm() {
     lastName: '',
     email: '',
     password: '',
-    phone: ""
+    phone: "91"
   };
 
   const methods = useForm<FormValuesProps>({

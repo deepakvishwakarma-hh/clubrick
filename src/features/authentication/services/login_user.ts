@@ -16,9 +16,10 @@ const loginUserClientSide = async ({ identifier, password, path }: type) => {
     callbackUrl: "/",
   });
   if (res?.error) {
-    console.log(res.error);
+    return {error: res.error}
+    // console.log(res.error);
   } else {
-    void Router.push(`${path ? path : "/"}`);
+    void Router.push(`${path ? path : "/home"}`);
   }
   return res;
 };
