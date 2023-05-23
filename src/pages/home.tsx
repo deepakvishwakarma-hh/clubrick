@@ -9,7 +9,7 @@ import LineCategoies from '~/components/__new/line-categoies';
 import ProductList from '~/components/__new/product-list-previewer';
 import { CategoryCard } from '~/sections/@dashboard/e-commerce/shop';
 import MainLayout from '../layouts/main';
-
+import AdsBoard from '~/components/__new/ad-board';
 
 
 HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLayout>;
@@ -35,6 +35,8 @@ export default function HomePage() {
                 <CarouselAnimation data={carouselMockData} />
             </Box>
 
+
+
             <Container>
 
                 <Typography variant="h5" noWrap gutterBottom>
@@ -50,6 +52,14 @@ export default function HomePage() {
                 </Grid>
 
                 <ProductList name="Shoes" paragraph="This is dummy paragraph" />
+
+            </Container>
+
+            <AdsBoard />
+
+
+            <Container>
+
 
                 <ProductList name="Shirts" paragraph="This is dummy paragraph" />
 
