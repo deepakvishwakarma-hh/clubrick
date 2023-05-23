@@ -13,16 +13,16 @@ export const authRouter = createTRPCRouter({
       z.object({
         email: z.string(),
         password: z.string(),
-        firstName:z.string(),
-      lastName:z.string().optional(),
-      phone:z.string()
+        firstName: z.string(),
+        lastName: z.string().optional(),
+        phone: z.string()
       })
     )
     .mutation(async ({ input, ctx }) => {
-  
+
       const userData = await createUser(input);
       return userData;
     }),
 
-  
+
 });
