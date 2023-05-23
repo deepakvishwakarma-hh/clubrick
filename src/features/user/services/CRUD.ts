@@ -4,8 +4,6 @@ import { signOut } from "next-auth/react";
 import { RouterOutputs } from "~/utils/api";
 import strapi from "~/utils/strapi";
 import { UpdateUserT } from "../types/CRUD";
-import { TAG_SEARCH_TYPE } from "~/features/posts/types/tag,d";
-import { Main } from "../types/GET";
 
 // Get User Details
 export const getUserProfileByUseName = async (username: string) => {

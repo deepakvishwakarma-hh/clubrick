@@ -63,6 +63,7 @@ export default function OtpValidation() {
 
 
     const generateRecaptcha = () => {
+        // @ts-ignore
         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
             'size': 'invisible',
             'callback': (response: any) => {
@@ -77,10 +78,12 @@ export default function OtpValidation() {
     const handleSendOtp = () => {
         setLoading(true)
         generateRecaptcha();
+            // @ts-ignore
         let appVerifier = window.recaptchaVerifier;
         signInWithPhoneNumber(auth, `+${phone}`, appVerifier)
             .then((confirmationResult) => {
                 console.log("Sms Send Confirmation", confirmationResult)
+                    // @ts-ignore
                 window.confirmationResult = confirmationResult;
 
                 setHasFilled(true)
@@ -97,9 +100,9 @@ export default function OtpValidation() {
         if (otp.length === 6) {
             setLoading(true)
 
-            // verifu otp
+                // @ts-ignore
             let confirmationResult = window?.confirmationResult;
-            confirmationResult.confirm(otp).then((result) => {
+            confirmationResult.confirm(otp).then((result:any) => {
                 // User signed in successfully.
                 setLoading(false)
                 let user = result.user;
@@ -107,7 +110,7 @@ export default function OtpValidation() {
                 mutate({ otp_verification_state: true })
                 router.push("/home")
                 // ...
-            }).catch((error) => {
+            }).catch((error:any) => {
                 setLoading(false)
 
                 // User couldn't sign in (bad verification code?)

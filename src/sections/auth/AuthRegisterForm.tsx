@@ -19,10 +19,8 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 
 
 // firebase 
-import { app } from '../../../firebase/firebase.config'
 import { useRouter } from 'next/router';
 
-const auth = getAuth(app)
 
 // ----------------------------------------------------------------------
 
