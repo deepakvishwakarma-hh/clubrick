@@ -58,7 +58,7 @@ export default function ShopProductCard({ product }: Props) {
       }}
     >
       <Box sx={{ position: 'relative', p: 1 }}>
-        {status && (
+        {/* {status && (
           <Label
             variant="filled"
             color={(status === 'sale' && 'error') || 'info'}
@@ -72,7 +72,7 @@ export default function ShopProductCard({ product }: Props) {
           >
             {status}
           </Label>
-        )}
+        )} */}
 
         <Fab
           color="warning"

@@ -49,12 +49,12 @@ type FormValuesProps = {
 };
 
 export default function OtpValidation() {
-    const {data:session} = useSession()
-    const {mutate} = api.user.updateUser.useMutation()
+    const { data: session } = useSession()
+    const { mutate } = api.user.updateUser.useMutation()
     const router = useRouter()
     const [hasFilled, setHasFilled] = useState(false);
     const [phone, setPhone] = useState(`+91${router.query.mobileNumber}`);
-    console.log({phone})
+    console.log({ phone })
     const [otp, setOtp] = useState("");
 
     const [loading, setLoading] = useState(false)
@@ -82,7 +82,7 @@ export default function OtpValidation() {
             .then((confirmationResult) => {
                 console.log("Sms Send Confirmation", confirmationResult)
                 window.confirmationResult = confirmationResult;
-                
+
                 setHasFilled(true)
                 setLoading(false)
 
@@ -104,8 +104,8 @@ export default function OtpValidation() {
                 setLoading(false)
                 let user = result.user;
                 console.log(user);
-                mutate({otp_verification_state:true})
-                router.push("/")
+                mutate({ otp_verification_state: true })
+                router.push("/home")
                 // ...
             }).catch((error) => {
                 setLoading(false)
@@ -121,7 +121,7 @@ export default function OtpValidation() {
     if (!hasFilled) {
         return (
             <Stack spacing={2.5}>
-                <MuiTelInput value={phone} onChange={setPhone}  />
+                <MuiTelInput value={phone} onChange={setPhone} />
 
                 <LoadingButton
                     id='sign-in-button'

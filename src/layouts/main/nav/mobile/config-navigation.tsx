@@ -1,96 +1,9 @@
-import { useState, useEffect } from 'react';
-// next
-import { useRouter } from 'next/router';
-// @mui
-import { List, Drawer, IconButton } from '@mui/material';
-// config
-import { NAV } from '../../../../config-global';
-// components
-import Logo from '../../../../components/logo';
-import Iconify from '../../../../components/iconify';
-import Scrollbar from '../../../../components/scrollbar';
-//
-import { NavProps } from '../types';
-import NavList from './NavList';
 
-import { NavSectionVertical } from '~/components/nav-section';
-import { Box } from '@mui/system';
-import { useTheme } from '@emotion/react';
-
+import SvgColor from "~/components/svg-color/SvgColor";
+import { PATH_DASHBOARD } from "~/routes/paths";
+import Label from "~/components/label/Label";
+import Iconify from "~/components/iconify/Iconify";
 // ----------------------------------------------------------------------
-import SvgColor from '~/components/svg-color/SvgColor';
-import { PATH_DASHBOARD } from '~/routes/paths';
-
-
-export default function NavMobile({ isOffset, data }: NavProps) {
-  const { pathname } = useRouter();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      handleClose();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <IconButton
-        onClick={handleOpen}
-        sx={{
-          mr: 1,
-          ...(isOffset && {
-            color: 'white',
-          }),
-        }}
-      >
-        <Iconify width={30} color="white" icon="eva:menu-2-fill" />
-      </IconButton>
-
-      <Drawer
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: {
-            pb: 5,
-            width: NAV.W_BASE,
-          },
-        }}
-      >
-        <Scrollbar>
-
-          <Box sx={{ background: (theme) => theme.palette.primary.main }}>
-            <Logo sx={{ mx: 2.5, my: 2.5 }} />
-          </Box>
-
-          <List component="nav" disablePadding>
-
-
-            <NavSectionVertical
-              data={NAV_ITEMS}
-              sx={{
-                borderRadius: 2,
-                bgcolor: 'background.paper',
-                boxShadow: (theme) => theme.customShadows.z24,
-              }}
-            />
-
-          </List>
-        </Scrollbar>
-      </Drawer>
-    </>
-  );
-}
-
-// Presentation Data (place: development only)
 
 const icon = (name: string) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -129,10 +42,7 @@ const ICONS = {
 
 };
 
-
-const NAV_ITEMS = [
-
-
+const navConfig = [
   {
     subheader: 'Men ',
     items: [
@@ -162,7 +72,7 @@ const NAV_ITEMS = [
         ],
       },
       {
-        title: 'Topware Sportsware',
+        title: 'Casual Sportsware',
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.casual,
         children: [
@@ -188,7 +98,6 @@ const NAV_ITEMS = [
     ]
 
   },
-
   {
     subheader: 'Women ',
     items: [
@@ -217,7 +126,7 @@ const NAV_ITEMS = [
         ],
       },
       {
-        title: 'Topware Sportsware',
+        title: 'Casual Sportsware',
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.women_casual,
         children: [
@@ -243,7 +152,6 @@ const NAV_ITEMS = [
     ]
 
   },
-
   {
     subheader: 'Accessories',
     items: [
@@ -293,4 +201,8 @@ const NAV_ITEMS = [
     ]
 
   },
+
+
 ];
+
+export default navConfig;

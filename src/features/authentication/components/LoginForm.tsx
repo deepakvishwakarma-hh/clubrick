@@ -70,7 +70,6 @@ export default function LoginForm() {
           <Link href="/auth/forgot" className="block">
             <UnstyledButton className="text-c_primary font-[400] text-c_sm">Forgot my password</UnstyledButton>
           </Link>
-
         </div>
 
 

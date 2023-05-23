@@ -3,7 +3,7 @@ import Head from 'next/head';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 
-import { Box, Button, Stack, Card, Container, CardHeader, CardContent, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Stack, Card, Container, CardHeader, CardContent, Grid, Paper, Typography } from '@mui/material';
 import { signOut, useSession } from 'next-auth/react';
 // layouts
 import MainLayout from '../layouts/main';
@@ -20,6 +20,9 @@ import _mock from '~/_mock/_mock';
 import { Masonry } from '@mui/lab';
 import { CategoryCard, ShopProductCard } from '~/sections/@dashboard/e-commerce/shop';
 // ----------------------------------------------------------------------
+
+
+
 
 HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLayout>;
 
@@ -198,41 +201,43 @@ export default function HomePage() {
                 <title> The starting point for your next project | Minimal UI</title>
             </Head>
 
-            <Box sx={{ mx: 5, my: 4 }}>
+            <Container sx={{ mt: 1 }}>
+
+                <ButtonGroup sx={{ display: 'flex' }} variant="text" color="inherit">
+                    <Button sx={{ flex: 1 }} >Men</Button>
+                    <Button sx={{ flex: 1 }} >Woman</Button>
+                    <Button sx={{ flex: 1 }} >Kids</Button>
+                    <Button sx={{ flex: 1 }} >Sport Equipment</Button>
+                    <Button sx={{ flex: 1 }} >More</Button>
+                </ButtonGroup>
+            </Container>
+
+            <Box sx={{ mx: 5, mb: 4, mt: 1 }}>
                 <CarouselAnimation data={carouselMockData} />
             </Box>
 
             <Container>
 
                 <Typography variant="h5" noWrap gutterBottom>
-                    Categories
+                    Most Popular Categories
                 </Typography>
 
                 <Grid container sx={{ mb: 5 }} spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                     {categoryData.map((_, index) => (
                         <Grid item xs={2} sm={4} md={2} key={index}>
                             <CategoryCard {..._} />
-
                         </Grid>
                     ))}
                 </Grid>
 
-
-
-
-
                 <Grid sx={{ border: '1px whitesmoke solid', borderRadius: 2, overflow: "hidden", p: 2, my: 5 }} container spacing={2}>
                     <Grid item xs={3} sx={{}} >
-
                         <Typography sx={{ pt: 2 }} variant="h3" noWrap gutterBottom>
-                            Shoes Store
+                            Shoes
                         </Typography>
 
                         <Typography sx={{ mb: 2 }} variant="body1" gutterBottom>
-
-                            A shoe store is a retail establishment that specializes in selling various types of footwear for men, women, and children.
-
-
+                            A shoe store is a retail establishment.
                         </Typography>
 
 
@@ -240,13 +245,6 @@ export default function HomePage() {
 
                     </Grid>
                     <Grid item xs={9}>
-
-
-
-
-                        {/* <Scrollbar> */}
-
-
                         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
                             {mockProducts.map((_, index) => (
@@ -257,10 +255,6 @@ export default function HomePage() {
                                 </Grid>
                             ))}
                         </Grid>
-
-
-
-                        {/* </Scrollbar> */}
 
                     </Grid>
                 </Grid>
@@ -271,33 +265,26 @@ export default function HomePage() {
                     <Grid item xs={3} sx={{}} >
 
                         <Typography sx={{ pt: 2 }} variant="h3" noWrap gutterBottom>
-                            Speakers Store
+                            Speakers
                         </Typography>
+
+                        <Typography sx={{ mb: 2 }} variant="body1" gutterBottom>
+                            A bass boosted speakers
+                        </Typography>
+
                         <Button variant='soft'>See all products</Button>
 
                     </Grid>
                     <Grid item xs={9}>
 
-
-
-
-                        {/* <Scrollbar> */}
-
-
                         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
                             {mockProducts.map((_, index) => (
                                 <Grid item xs={2} sm={4} md={3} key={index}>
-
                                     <ShopProductCard product={_} />
-
                                 </Grid>
                             ))}
                         </Grid>
-
-
-
-                        {/* </Scrollbar> */}
 
                     </Grid>
                 </Grid>
@@ -323,3 +310,4 @@ export default function HomePage() {
         </>
     );
 }
+
