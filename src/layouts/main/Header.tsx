@@ -3,8 +3,9 @@ import { useTheme } from '@mui/material/styles';
 import Iconify from '~/components/iconify/Iconify';
 import { Box, AppBar, Toolbar, Container, BoxProps, IconButton, Stack } from '@mui/material';
 // hooks
+import Sidebar from '~/components/__new/sidebar';
 import useOffSetTop from '../../hooks/useOffSetTop';
-// import useResponsive from '../../hooks/useResponsive';
+import useResponsive from '../../hooks/useResponsive';
 // utils
 import { bgBlur } from '../../utils/cssStyles';
 // import { bgBlur } from '../../utils/cssStyles';
@@ -13,10 +14,7 @@ import { HEADER } from '../../config-global';
 // components
 import Logo from '../../components/logo';
 //
-import NavMobile from './nav/mobile';
-import navConfig from './nav/config-navigation';
 // import NavDesktop from './nav/desktop';
-
 // ----------------------------------------------------------------------
 
 import AccountPopover from '../dashboard/header/AccountPopover';
@@ -24,7 +22,7 @@ import AccountPopover from '../dashboard/header/AccountPopover';
 export default function Header() {
   const theme = useTheme();
 
-  // const isDesktop = useResponsive('up', 'md');
+  const isDesktop = useResponsive('up', 'md');
 
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
 
@@ -50,13 +48,10 @@ export default function Header() {
         }}
       >
         <Container sx={{ height: 1, display: 'flex', alignItems: 'center', }}>
-          <NavMobile isOffset={isOffset} data={navConfig} />
+          <Sidebar isOffset={isOffset} data={[]} />
           <Logo sx={{ mr: 3 }} />
 
-
           <Box sx={{ flexGrow: 1 }} />
-
-
 
           <Stack
             spacing={1}
@@ -67,9 +62,11 @@ export default function Header() {
               mr: { xs: 2, md: 2 },
             }}
           >
-            <IconButton sx={{ color: 'white' }}>
-              <Iconify width={25} icon="mingcute:search-3-line" />
-            </IconButton>
+            {isDesktop && (
+              <IconButton sx={{ color: 'white' }}>
+                <Iconify width={25} icon="mingcute:search-3-line" />
+              </IconButton>
+            )}
 
 
             <IconButton sx={{ color: 'white' }}>
@@ -78,7 +75,7 @@ export default function Header() {
           </Stack>
 
 
-          <AccountPopover />
+          {isDesktop && <AccountPopover />}
         </Container>
       </Toolbar>
 
