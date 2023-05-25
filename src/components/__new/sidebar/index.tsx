@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import { Box, Stack } from '@mui/system';
-import { List, Drawer, IconButton } from '@mui/material';
+import { List, Drawer, IconButton, Typography, Button } from '@mui/material';
 // config
 import { NAV } from '~/config-global';
 // components
@@ -16,12 +16,22 @@ import { NavProps } from '~/layouts/main/nav/types';
 // config
 import useResponsive from '~/hooks/useResponsive';
 import NAV_ITEMS, { mobileConfig } from './config-navigation';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 // ----------------------------------------------------------------------
 
 export default function Sidebar({ isOffset, data }: NavProps) {
     const { pathname } = useRouter();
+    const session = useSession()
     const [open, setOpen] = useState(false);
     const isDesktop = useResponsive('up', 'md');
+
+
+    const isUserAuthenticated = session.status === 'authenticated'
+
+    console.log(session)
+
+
     useEffect(() => {
         if (open) {
             handleClose();
@@ -68,16 +78,19 @@ export default function Sidebar({ isOffset, data }: NavProps) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-
-
+                        py: 1.5
                     }}>
-                        <Logo sx={{ mx: 2.5, my: 2.5 }} />
+
+                        <Button disabled={isUserAuthenticated} href='/auth/login' LinkComponent={Link}>
+                            <Typography ml={4} sx={{ color: (t) => t.palette.common.white }} variant='h6'>Hello, {isUserAuthenticated ? 'username' : 'Sign In'}</Typography>
+                        </Button>
+
                         <IconButton
                             onClick={handleClose}
                             sx={{
                                 mr: 1,
                             }}>
-                            <Iconify width={30} color="white" icon="iconamoon:close" />
+                            <Iconify width={25} color="white" icon="iconamoon:close" />
                         </IconButton>
                     </Box>
 

@@ -36,7 +36,7 @@ export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app; // as '/dashboard/ap
 
 export const HEADER = {
   H_MOBILE: 64,
-  H_MAIN_DESKTOP: 88,
+  H_MAIN_DESKTOP: 64,
   H_DASHBOARD_DESKTOP: 92,
   H_DASHBOARD_DESKTOP_OFFSET: 92 - 32,
 };

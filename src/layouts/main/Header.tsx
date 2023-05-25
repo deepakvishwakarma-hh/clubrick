@@ -1,7 +1,7 @@
 // @mui
 import { useTheme } from '@mui/material/styles';
 import Iconify from '~/components/iconify/Iconify';
-import { Box, AppBar, Toolbar, Container, BoxProps, IconButton, Stack } from '@mui/material';
+import { Box, AppBar, Toolbar, Container, BoxProps, IconButton, Stack, Button } from '@mui/material';
 // hooks
 import Sidebar from '~/components/__new/sidebar';
 import useOffSetTop from '../../hooks/useOffSetTop';
@@ -14,17 +14,20 @@ import { HEADER } from '../../config-global';
 // components
 import Logo from '../../components/logo';
 //
-// import NavDesktop from './nav/desktop';
+// import NavDesktop from './nav/desktop'
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+;
 // ----------------------------------------------------------------------
 
 import AccountPopover from '../dashboard/header/AccountPopover';
 
 export default function Header() {
   const theme = useTheme();
-
+  const session = useSession()
   const isDesktop = useResponsive('up', 'md');
-
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
+  const isUserAuthenticated = session.status === 'authenticated'
 
   return (
     <AppBar color="transparent" sx={{ boxShadow: 1, background: theme.palette.primary.main }}>
@@ -68,14 +71,23 @@ export default function Header() {
               </IconButton>
             )}
 
-
             <IconButton sx={{ color: 'white' }}>
               <Iconify width={25} icon="ph:shopping-cart-simple-bold" />
             </IconButton>
           </Stack>
 
-
-          {isDesktop && <AccountPopover />}
+          {isUserAuthenticated
+            ? isDesktop && <AccountPopover />
+            : (
+              <Button
+                href="/auth/login"
+                LinkComponent={Link}
+                sx={{
+                  color: theme.palette.common.white,
+                  fontSize: theme.typography.h6
+                }}>Login</Button>
+            )
+          }
         </Container>
       </Toolbar>
 
