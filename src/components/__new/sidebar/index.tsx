@@ -107,7 +107,6 @@ export default function Sidebar({ isOffset, data }: NavProps) {
                                 boxShadow: (theme) => theme.customShadows.z24,
                             }}
                         />
-
                     </List>
                 </Scrollbar>
             </Drawer>

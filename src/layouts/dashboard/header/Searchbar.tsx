@@ -116,6 +116,7 @@ function Searchbar() {
     };
   });
 
+
   useEffect(() => {
     if (open) {
       handleClose();
@@ -166,7 +167,7 @@ function Searchbar() {
               PopperComponent={StyledPopper}
               onInputChange={(event, value) => setSearchQuery(value)}
               noOptionsText={<SearchNotFound query={searchQuery} sx={{ py: 10 }} />}
-              options={allItems.sort((a, b) => -b.group.localeCompare(a.group))}
+              options={customTestData.sort((a, b) => -b.group.localeCompare(a.group))}
               groupBy={(option) => option.group}
               getOptionLabel={(option) => `${option.title} ${option.path} ${option.indexKey}`}
               renderInput={(params) => (
@@ -280,3 +281,21 @@ function handleLoop(array: any, subheader?: string) {
     }),
   }));
 }
+
+
+
+
+
+
+
+
+const customTestData = [
+
+  { group: 'shirt', title: 'green shirt', path: '/green-shirt', indexKey: 'minimal' },
+
+  { group: 'pants', title: 'green pants', path: '/green-pants', indexKey: 'minimal' },
+  { group: 'shirt', title: 'blue shirt', path: '/blue-shirt', indexKey: 'minimal' },
+
+
+
+]

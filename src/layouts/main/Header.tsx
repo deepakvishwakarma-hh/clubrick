@@ -17,7 +17,8 @@ import Logo from '../../components/logo';
 // import NavDesktop from './nav/desktop'
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-;
+import Search from '~/components/__new/home-search';
+
 // ----------------------------------------------------------------------
 
 import AccountPopover from '../dashboard/header/AccountPopover';
@@ -54,7 +55,9 @@ export default function Header() {
           <Sidebar isOffset={isOffset} data={[]} />
           <Logo sx={{ mr: 3 }} />
 
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1, background: '' }} >
+            {/* <Search /> */}
+          </Box>
 
           <Stack
             spacing={1}
@@ -65,10 +68,14 @@ export default function Header() {
               mr: { xs: 2, md: 2 },
             }}
           >
+
             {isDesktop && (
-              <IconButton sx={{ color: 'white' }}>
-                <Iconify width={25} icon="mingcute:search-3-line" />
-              </IconButton>
+              // <IconButton sx={{ color: 'white' }}>
+              //   <Iconify width={25} icon="mingcute:search-3-line" />
+              // </IconButton>
+
+              <Search />
+
             )}
 
             <IconButton sx={{ color: 'white' }}>

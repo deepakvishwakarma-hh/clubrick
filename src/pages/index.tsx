@@ -10,6 +10,7 @@ import ProductList from '~/components/__new/product-list-previewer';
 import { CategoryCard } from '~/sections/@dashboard/e-commerce/shop';
 import MainLayout from '../layouts/main';
 import AdsBoard from '~/components/__new/ad-board';
+import { Space } from '@mantine/core';
 
 HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLayout>;
 
@@ -20,6 +21,7 @@ export default function HomePage() {
       <Head>
         <title> The starting point for your next project | Minimal UI</title>
       </Head>
+
 
 
       {isDesktop && <LineCategoies />}

@@ -2,7 +2,7 @@ import { Button, Box, useTheme, Container } from "@mui/material";
 export default function LineCategoies() {
     const theme = useTheme()
     return (
-        <Container sx={{ mt: 1 }}>
+        <Container sx={{ mt: 9 }}>
             <Box sx={{ display: 'flex', alignItems: "center", justifyContent: "space-around" }}>
                 {you_can_say_this_dummmy_data.map(({ name, href }, i) =>
                 (

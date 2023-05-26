@@ -65,7 +65,7 @@ export default function ShopProductSearch() {
       componentsProps={{
         popper: {
           sx: {
-            width: `280px !important`,
+            width: `500px !important`,
           },
         },
         paper: {
