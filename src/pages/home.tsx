@@ -11,21 +11,18 @@ import { CategoryCard } from '~/sections/@dashboard/e-commerce/shop';
 import MainLayout from '../layouts/main';
 import AdsBoard from '~/components/__new/ad-board';
 
-
 HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLayout>;
 
 export default function HomePage() {
     const isDesktop = useResponsive('up', 'md');
-
     return (
         <>
             <Head>
                 <title> The starting point for your next project | Minimal UI</title>
             </Head>
 
-            <Container sx={{ mt: 1 }}>
-                <LineCategoies />
-            </Container>
+
+            {isDesktop && <LineCategoies />}
 
             <Box sx={{
                 mx: isDesktop ? 5 : 1,

@@ -27,7 +27,7 @@ export default function MainLayout({ children }: Props) {
         sx={{
           flexGrow: 1,
           ...(!isHome && {
-            pt: { xs: 8, md: 11 },
+            pt: { xs: 8, md: 8 },
           }),
         }}
       >
