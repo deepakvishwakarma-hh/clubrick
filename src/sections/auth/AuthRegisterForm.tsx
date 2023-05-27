@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { api } from '~/utils/api';
 import { useState } from 'react';
@@ -10,17 +9,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, IconButton, InputAdornment, Alert, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // auth
-import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from 'firebase/auth';
 import { loginUserClientSide } from '~/features/authentication/services/login_user';
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 
-
-// firebase 
+// firebase
 import { useRouter } from 'next/router';
-
+import { createUser } from '~/features/authentication/services/register';
 
 // ----------------------------------------------------------------------
 
@@ -34,8 +32,8 @@ type FormValuesProps = {
 };
 
 export default function AuthRegisterForm() {
-  const router = useRouter()
-  const { mutate } = api.auth.register.useMutation()
+  const router = useRouter();
+  const { mutate } = api.auth.register.useMutation();
   const { register } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -44,8 +42,8 @@ export default function AuthRegisterForm() {
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     phone: Yup.string()
-    .required('Phone number is required')
-    .matches(/^91\d{10}$/, 'Phone number must start with 91 and have 10 digits'),
+      .required('Phone number is required')
+      .matches(/^91\d{10}$/, 'Phone number must start with 91 and have 10 digits'),
     password: Yup.string().required('Password is required'),
   });
 
@@ -54,7 +52,7 @@ export default function AuthRegisterForm() {
     lastName: '',
     email: '',
     password: '',
-    phone: "91"
+    phone: '91',
   };
 
   const methods = useForm<FormValuesProps>({
@@ -66,26 +64,30 @@ export default function AuthRegisterForm() {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful, },
-
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      // 
+      // let resp = await createUser(data);
+      // loginUserClientSide({
+      //   identifier: data.email as string,
+      //   password: data.password,
+      //   path: `${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`,
+      // });
+      //
       mutate(data, {
         onError(error: any) {
-          console.error("Mutation failed:", error?.message);
+          console.error('Mutation failed:', error?.message);
         },
         onSuccess(data1: any) {
           loginUserClientSide({
             identifier: data1.user.email as string,
             password: data1.password,
-            path:`${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`
+            path: `${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`,
           });
         },
-      }
-      )
+      });
     } catch (error) {
       console.error(error);
       reset();
@@ -94,13 +96,10 @@ export default function AuthRegisterForm() {
         message: error.message || error,
       });
     }
-  }
-
-
-
+  };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit) as any} >
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit) as any}>
       <Stack spacing={2.5}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
@@ -109,9 +108,8 @@ export default function AuthRegisterForm() {
           <RHFTextField name="lastName" label="Last name" />
         </Stack>
 
-        <RHFTextField type='number' name="phone" label="Phone Number" placeholder='+91 987654321' />
-        <RHFTextField type='email' name="email" label="Email" placeholder='example@gmail.com' />
-
+        <RHFTextField type="number" name="phone" label="Phone Number" placeholder="+91 987654321" />
+        <RHFTextField type="email" name="email" label="Email" placeholder="example@gmail.com" />
 
         {/* <TextField
           type='number' name="Phone" label="Phone Number" placeholder='+91 987654321'
@@ -121,7 +119,6 @@ export default function AuthRegisterForm() {
 
           value={number}
         /> */}
-
 
         <RHFTextField
           name="password"
@@ -141,16 +138,14 @@ export default function AuthRegisterForm() {
         <div id="recaptcha-container" />
 
         <LoadingButton
-          id='sign-in-button'
+          id="sign-in-button"
           fullWidth
           color="inherit"
           size="large"
           type="submit"
           variant="contained"
           onClick={() => {
-
             // axios.get('https://www.fast2sms.com/dev/bulkV2?authorization=3ZA8rIBQjwYDGaXF6VvuTbpJNcPi45LqRMtCK7smEOxlH92UgSAwZRJKyosrGFhYCf1W72cMxBQdXjTt&variables_values=5599&route=otp&numbers=917354657459,8888888888,7777777777')
-
           }}
           loading={isSubmitting || isSubmitSuccessful}
           sx={{
@@ -166,11 +161,7 @@ export default function AuthRegisterForm() {
         </LoadingButton>
 
         <div id="recaptcha" />
-
       </Stack>
-    </FormProvider >
+    </FormProvider>
   );
 }
-
-
-
