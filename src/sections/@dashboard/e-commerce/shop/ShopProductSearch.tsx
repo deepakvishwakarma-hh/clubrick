@@ -102,7 +102,7 @@ export default function ShopProductSearch() {
             <Image
               alt={cover}
               src={cover}
-              sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }}
+              sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5, border: "2px red solid" }}
             />
 
             <Link underline="none" onClick={() => handleGotoProduct(name)}>

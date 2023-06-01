@@ -1,335 +1,224 @@
-import { useState, memo, useEffect } from 'react';
-import parse from 'autosuggest-highlight/parse';
-import match from 'autosuggest-highlight/match';
-// next
-import { useRouter } from 'next/router';
-// @mui
-import { alpha, styled } from '@mui/material/styles';
-import {
-    Box,
-    Slide,
-    Popper,
-    InputBase,
-    PopperProps,
-    Autocomplete,
-    InputAdornment,
-    ClickAwayListener,
-} from '@mui/material';
-// utils
-import { bgBlur } from '../../../utils/cssStyles';
-import flattenArray from '../../../utils/flattenArray';
-// components
-import Iconify from '../../../components/iconify';
-import { NavListProps } from '../../../components/nav-section';
-import { IconButtonAnimate } from '../../../components/animate';
-import SearchNotFound from '../../../components/search-not-found';
-//
-import NavConfig from '~/layouts/dashboard/nav/config-navigation';
-// ----------------------------------------------------------------------
-
-const APPBAR_MOBILE = 64;
-const APPBAR_DESKTOP = 92;
-
-const StyledSearchbar = styled('div')(({ theme }) => ({
-    ...bgBlur({ color: theme.palette.background.default }),
-    top: 0,
-    left: 0,
-    zIndex: 99,
-    width: '100%',
-    display: 'flex',
-    position: 'absolute',
-    alignItems: 'center',
-    height: APPBAR_MOBILE,
-    padding: theme.spacing(0, 3),
-    boxShadow: theme.customShadows.z8,
-    [theme.breakpoints.up('md')]: {
-        height: APPBAR_DESKTOP,
-        padding: theme.spacing(0, 5),
-    },
-}));
-
-const StyledPopper = styled((props: PopperProps) => <Popper {...props} />)(({ theme }) => ({
-    left: `8px !important`,
-    top: `${APPBAR_MOBILE + 8}px !important`,
-    width: 'calc(100% - 16px) !important',
-    transform: 'none !important',
-    [theme.breakpoints.up('md')]: {
-        top: `${APPBAR_DESKTOP + 8}px !important`,
-    },
-    '& .MuiAutocomplete-paper': {
-        padding: theme.spacing(1, 0),
-    },
-    '& .MuiListSubheader-root': {
-        // '&.MuiAutocomplete-groupLabel': {
-        //     ...bgBlur({ color: theme.palette.background.neutral }),
-        //     ...theme.typography.overline,
-        //     top: 0,
-        //     margin: 0,
-        //     lineHeight: '48px',
-        //     borderRadius: theme.shape.borderRadius,
-        // },
-    },
-    '& .MuiAutocomplete-listbox': {
-        '& .MuiAutocomplete-option': {
-            padding: theme.spacing(0.5, 2),
-            margin: 0,
-            display: 'block',
-            border: `dashed 1px transparent`,
-            borderBottomColor: theme.palette.divider,
-            '&:last-of-type': {
-                borderBottomColor: 'transparent',
-            },
-            '&:hover': {
-                borderColor: theme.palette.primary.main,
-                backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
-            },
-        },
-    },
-}));
-
-// ----------------------------------------------------------------------
-
-interface Option extends NavListProps {
-    subheader: string;
-}
-
-function Searchbar() {
-    const { push, pathname } = useRouter();
-
-    const [open, setOpen] = useState(true);
-
-    const [searchQuery, setSearchQuery] = useState('');
-
-    // const reduceItems = NavConfig.map((list) =>
-    //     handleLoop(list.items, (list as any).subheader)
-    // ).flat();
-
-    // const allItems = flattenArray(reduceItems).map((option) => {
-    //     const group = splitPath(reduceItems, option.path);
-
-    //     return {
-    //         group: group && group.length > 1 ? group[0] : (option as Option).subheader,
-    //         title: option.title,
-    //         path: option.path,
-    //         indexKey: 'minimal',
-    //     };
-    // });
+import Category from "./CategoryItem"
+import Product from "./ProductItem"
+import Iconify from "~/components/iconify/Iconify"
+import { CustomInput, InputAdornment } from "./Input"
+import { Box, Grid, Paper, Typography, Button, Chip, useTheme, Stack, Input, IconButton } from "@mui/material"
+import { useState, useMemo, ChangeEvent } from "react"
+import axios from "axios"
+import { useLocalStorage } from "@mantine/hooks"
+import RecentSearch from "./RecentSearchItem"
+import useResponsive from "~/hooks/useResponsive"
 
 
-    // useEffect(() => {
-    //     if (open) {
-    //         handleClose();
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [pathname]);
+export default function Search() {
+    const theme = useTheme()
+    const isDesktop = useResponsive('up', 'md');
+    const [isFocused, setFocus] = useState(false)
+    const [RecentSearches, setRecentSearches] = useLocalStorage({ key: 'search-history', defaultValue: [] })
+    const [text, setText] = useState('')
+    const [searchProducts, setSearchProducts] = useState('');
+    const [searchResults, setSearchResults] = useState({
+        categories: [] as any[],
+        products: [] as any[]
+    });
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const handleChangeSearch = async (value: string) => {
+        try {
+            setSearchProducts(value);
+            if (value) {
+                console.log(value)
+                const response = await axios.get('/api/search', {
+                    params: { query: value },
+                });
 
-    const handleClick = (path: string) => {
-        if (path.includes('http')) {
-            window.open(path);
-        } else {
-            push(path);
+                setSearchResults(response.data);
+            }
+        } catch (error) {
+            console.error(error);
         }
-        handleClose();
+    };
+
+    const handleGotoProduct = (name: string) => {
+        alert('handleGotoProduct()')
+        // push(PATH_DASHBOARD.eCommerce.view(paramCase(name)));
     };
 
     const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            handleClick(searchQuery);
+            handleGotoProduct(searchProducts);
+            setRecentSearches(prev => [...prev, text] as any)
         }
     };
 
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { target: { value } } = event
+        setText(value)
+        // prevent api call on empty input
+        if (value.trim() !== '') {
+            handleChangeSearch(value.trim())
+        }
+    }
+
+    const noSearchResult = [...searchResults.categories, ...searchResults.products].length == 0
+
+    const handleInputCleanUp = () => {
+        setText('')
+    }
+
+    const handleFocus = () => {
+        setFocus(true)
+    }
+    const handleBlur = () => {
+        setFocus(false)
+
+    }
+
+
+    const handleClearSearches = () => {
+        setRecentSearches([])
+    }
+
+
+
+
     return (
-        <ClickAwayListener onClickAway={handleClose}>
-            <div>
-                {!open && (
-                    <IconButtonAnimate onClick={handleOpen}>
-                        <Iconify icon="eva:search-fill" />
-                    </IconButtonAnimate>
+
+        <>
+            <Box sx={{ position: 'relative', width: '100%' }}>
+                <CustomInput
+                    sx={{ width: '500px', ml: 'auto' }}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    value={text}
+                    onKeyUp={handleKeyUp}
+                    onChange={handleChange}
+                    id="outlined-start-adornment"
+                    placeholder="Search goes here.."
+                    startAdornment={(
+                        <InputAdornment>
+                            <Iconify
+                                width={22}
+                                icon="eva:search-fill"
+                                sx={{ ml: 1, color: 'text.disabled' }} />
+                        </InputAdornment>
+                    )}
+                    endAdornment={text ? (
+                        <InputAdornment onClick={handleInputCleanUp}>
+                            <Iconify
+                                width={22}
+                                icon="iconamoon:close-fill"
+                                sx={{ ml: 1, color: 'text.disabled' }} />
+                        </InputAdornment>
+                    ) : undefined}
+                />
+
+                {isFocused && RecentSearches.length !== 0 && (
+                    <Paper
+                        sx={{
+                            mt: 1,
+                            px: 2,
+                            pb: 2,
+                            width: '100%',
+                            overflow: 'hidden',
+                            background: 'white',
+                            position: 'absolute',
+                            boxShadow: (t) => t.customShadows.dialog,
+                        }}>
+
+                        <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} >
+                            <Typography py={2.5} variant="body1" fontWeight={600} color={'GrayText'}>Recent Searches</Typography>
+
+                            <Button onClick={handleClearSearches} size="small" variant="soft" color="inherit"  >
+                                <Typography py={2.5} variant="caption" fontWeight={600} color={'GrayText'}>Clear Searches</Typography>
+                            </Button>
+
+                        </Stack>
+
+                        <Stack flexWrap={'wrap'} gap={1} direction={'row'}>
+                            {RecentSearches.map((name) => <RecentSearch name={name} />)}
+
+                        </Stack>
+
+
+                    </Paper>)
+                }
+
+
+
+
+
+                {isFocused && !noSearchResult && (
+                    <Paper
+                        sx={{
+                            mt: 1,
+                            pb: 0,
+                            width: '100%',
+                            overflow: 'hidden',
+                            background: 'white',
+                            position: 'absolute',
+                            boxShadow: (t) => t.customShadows.dialog,
+                        }}>
+
+                        <Grid container spacing={1} px={2} >
+                            {searchResults.categories.length !== 0 && (
+                                <Grid item xs={4}>
+                                    <Typography py={2.5} variant="body1" fontWeight={600} color={'GrayText'}>Collection</Typography>
+                                    <Box>
+                                        {searchResults.categories.map((category) => <Category name={category?.name} />)}
+                                    </Box>
+                                </Grid>
+                            )}
+
+                            {searchResults.products.length !== 0 && (
+                                <Grid item xs={8}>
+                                    <Typography py={2.5} variant="body1" fontWeight={600} color={'GrayText'}>Top Products</Typography>
+
+                                    <Grid container gap={1}>
+                                        {
+                                            searchResults.products.map((products) => {
+                                                return <Product name={products.name} />
+                                            })
+                                        }
+                                    </Grid>
+
+                                </Grid>
+                            )}
+
+                        </Grid>
+
+
+                        <Stack
+                            px={2}
+                            mt={2}
+                            py={2.5}
+                            fullWidth
+                            borderRadius={0}
+                            component={Button}
+                            sx={{
+                                flexDirection: 'row',
+                                justifyContent: 'left',
+                                background: theme.palette.grey[100],
+                                color: 'initial',
+                                ':hover': {
+                                    color: theme.palette.primary.main
+                                }
+                            }}>
+                            <Typography variant="body2">Explore all products matching <b>"{text}"</b> ({searchResults.products.length})  </Typography>
+                            <Iconify icon="basil:arrow-right-solid" width={25} />
+                        </Stack >
+                    </Paper>
                 )}
 
-                <Slide direction="down" in={open} mountOnEnter unmountOnExit>
-                    <StyledSearchbar>
-                        <Autocomplete
-                            sx={{ width: 1, height: 1 }}
-                            disablePortal
-                            disableClearable
-                            popupIcon={null}
-                            PopperComponent={StyledPopper}
-                            onInputChange={(event, value) => setSearchQuery(value)}
-                            noOptionsText={<SearchNotFound query={searchQuery} sx={{ py: 10 }} />}
-                            options={categoriesWithProducts}
-                            groupBy={(option) => option.categoryName}
-                            getOptionLabel={(option) => `${option.categoryName}`}
-                            renderInput={(params) => (
-                                <InputBase
-                                    {...params.InputProps}
-                                    inputProps={params.inputProps}
-                                    fullWidth
-                                    autoFocus
-                                    placeholder="Search..."
-                                    onKeyUp={handleKeyUp}
-                                    startAdornment={
-                                        <InputAdornment position="start">
-                                            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                                        </InputAdornment>
-                                    }
-                                    sx={{ height: 1, typography: 'h6' }}
-                                />
-                            )}
-                            renderOption={(props, option, { inputValue }) => {
 
-                                return (
-                                    <Box sx={{ display: 'flex', background: 'red' }} component="li" onClick={() => handleClick("/")}>
+            </Box>
 
-
-
-                                        <Box sx={{ flex: 1 }}>
-                                            {JSON.stringify(option)}
-
-                                        </Box>
-                                        <Box sx={{ flex: 1 }}>
-
-                                        </Box>
-
-
-
-
-                                        {/* <div>
-                                            {partsTitle.map((part, index) => (
-                                                <Box
-                                                    key={index}
-                                                    component="span"
-                                                    sx={{
-                                                        border: '2px solid green',
-                                                        typography: 'subtitle2',
-                                                        textTransform: 'capitalize',
-                                                        color: part.highlight ? 'primary.main' : 'text.primary',
-                                                    }}
-                                                >
-                                                    {part.text}
-                                                </Box>
-                                            ))}
-                                        </div>
-
-                                        <div>
-                                            {partsPath.map((part, index) => (
-                                                <Box
-                                                    key={index}
-                                                    component="span"
-                                                    sx={{
-                                                        border: '2px solid red',
-                                                        typography: 'caption',
-                                                        color: part.highlight ? 'primary.main' : 'text.secondary',
-                                                    }}
-                                                >
-
-                                                    <img src={image} />
-
-                                                    {part.text}
-                                                </Box>
-                                            ))}
-                                        </div> */}
-                                    </Box>
-                                );
-                            }}
-                        />
-                    </StyledSearchbar>
-                </Slide>
-            </div>
-        </ClickAwayListener>
-    );
-}
-
-export default memo(Searchbar);
-
-// ----------------------------------------------------------------------
-
-type ItemProps = {
-    path: string[];
-    currItem: NavListProps;
-};
-
-function splitPath(array: NavListProps[], key: string) {
-    let stack = array.map((item) => ({
-        path: [item.title],
-        currItem: item,
-    }));
-
-    while (stack.length) {
-        const { path, currItem } = stack.pop() as ItemProps;
-
-        if (currItem.path === key) {
-            return path;
-        }
-
-        if (currItem.children?.length) {
-            stack = stack.concat(
-                currItem.children.map((item: NavListProps) => ({
-                    path: path.concat(item.title),
-                    currItem: item,
-                }))
-            );
-        }
-    }
-    return null;
-}
-
-// ----------------------------------------------------------------------
-
-function handleLoop(array: any, subheader?: string) {
-    return array?.map((list: any) => ({
-        subheader: subheader || '',
-        ...list,
-        ...(list.children && {
-            children: handleLoop(list.children, subheader),
-        }),
-    }));
+        </>
+    )
 }
 
 
 
 
 
-
-
-
-const customTestData = [
-
-    { group: 'shirt', title: 'green shirt', path: '/green-shirt', indexKey: 'minimal', image: 'https://cdn4.buysellads.net/uu/1/127419/1670532177-Stock.jpg' },
-
-    { group: 'pants', title: 'green pants', path: '/green-pants', indexKey: 'minimal', image: 'https://cdn4.buysellads.net/uu/1/127419/1670532177-Stock.jpg' },
-    { group: 'shirt', title: 'blue shirt', path: '/blue-shirt', indexKey: 'minimal', image: 'https://cdn4.buysellads.net/uu/1/127419/1670532177-Stock.jpg' },
-
-
-
-]
-
-
-
-const categoriesWithProducts = [
-    {
-        categoryName: 'shirts',
-        products: [
-            { name: 'red shirt', image: 'https://plus.unsplash.com/premium_photo-1671641797551-bdff97d117bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNoaXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60' },
-            { name: 'white shirt', image: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNoaXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60' },
-            { name: 'blue shirt', image: 'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHNoaXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60' }
-        ]
-    },
-    {
-        categoryName: 'pents',
-        products: [
-            { name: 'red pents', image: 'https://plus.unsplash.com/premium_photo-1671641797551-bdff97d117bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNoaXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60' },
-            { name: 'white pents', image: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNoaXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60' },
-            { name: 'blue pents', image: 'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHNoaXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60' }
-        ]
-    }
-]
 

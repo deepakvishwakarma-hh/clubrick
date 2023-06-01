@@ -14,14 +14,12 @@ import { HEADER } from '../../config-global';
 // components
 import Logo from '../../components/logo';
 //
-// import NavDesktop from './nav/desktop'
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Search from '~/components/__new/home-search';
 
-// ----------------------------------------------------------------------
-
 import AccountPopover from '../dashboard/header/AccountPopover';
+import { useState } from 'react';
 
 export default function Header() {
   const theme = useTheme();
@@ -56,8 +54,9 @@ export default function Header() {
           <Logo sx={{ mr: 3 }} />
 
           <Box sx={{ flexGrow: 1, background: '' }} >
-            {/* <Search /> */}
+            {isDesktop && <Search />}
           </Box>
+
 
           <Stack
             spacing={1}
@@ -65,16 +64,14 @@ export default function Header() {
             justifyContent={{ xs: 'center', md: 'flex-start' }}
             sx={{
               mt: 0,
-              mr: { xs: 2, md: 2 },
-            }}
-          >
+              mx: { xs: 2, md: 2 },
+            }}>
 
-            {isDesktop && (
-              // <IconButton sx={{ color: 'white' }}>
-              //   <Iconify width={25} icon="mingcute:search-3-line" />
-              // </IconButton>
+            {!isDesktop && (
+              <IconButton sx={{ color: 'white' }}>
+                <Iconify width={25} icon="mingcute:search-3-line" />
+              </IconButton>
 
-              <Search />
 
             )}
 
