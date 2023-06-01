@@ -13,6 +13,7 @@ import { CustomAvatar } from '../../../components/custom-avatar';
 import { useSnackbar } from '../../../components/snackbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
+import { signOut } from 'next-auth/react';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +53,7 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      logout();
+      signOut();
       replace(PATH_AUTH.login);
       handleClosePopover();
     } catch (error) {
@@ -85,7 +86,13 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <CustomAvatar src={"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"} alt={user?.displayName} name={user?.displayName} />
+        <CustomAvatar
+          src={
+            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60'
+          }
+          alt={user?.displayName}
+          name={user?.displayName}
+        />
       </IconButtonAnimate>
 
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 200, p: 0 }}>

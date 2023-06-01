@@ -3,7 +3,7 @@
 import Strapi from 'strapi-sdk-js';
 
 const strapi = new Strapi({
-  url: 'https://cluebrick-strapi-production.up.railway.app',
+  url: 'https://cluebrick-strapi-production-20a0.up.railway.app',
   prefix: '/api',
   store: {
     key: 'strapi_jwt',

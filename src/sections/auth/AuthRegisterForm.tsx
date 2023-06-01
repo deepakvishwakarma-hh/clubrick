@@ -20,6 +20,7 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { useRouter } from 'next/router';
 import { createUser } from '~/features/authentication/services/register';
 import { MuiTelInput } from 'mui-tel-input';
+import convertPhoneNumber from '~/utils/extractNumber';
 
 // ----------------------------------------------------------------------
 
@@ -73,26 +74,33 @@ export default function AuthRegisterForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      console.log(data);
+      // console.log(data);
       // let resp = await createUser(data);
+      // console.log(resp);
       // loginUserClientSide({
       //   identifier: data.email as string,
       //   password: data.password,
       //   path: `${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`,
       // });
-      //
-      // mutate(data, {
-      //   onError(error: any) {
-      //     console.error('Mutation failed:', error?.message);
-      //   },
-      //   onSuccess(data1: any) {
-      //     loginUserClientSide({
-      //       identifier: data1.user.email as string,
-      //       password: data1.password,
-      //       path: `${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`,
-      //     });
-      //   },
-      // });
+      mutate(data, {
+        onError(error: any) {
+          reset();
+          setError('afterSubmit', {
+            ...error,
+            message: error.message || error,
+          });
+          console.error('Mutation failed:', error?.message);
+        },
+        onSuccess(data1: any) {
+          loginUserClientSide({
+            identifier: data1.user.email as string,
+            password: data1.password,
+            path: `${router.pathname}/?otpValidation=true&mobileNumber=${convertPhoneNumber(
+              data.phone
+            )}`,
+          });
+        },
+      });
     } catch (error) {
       console.error(error);
       reset();

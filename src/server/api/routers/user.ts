@@ -1,8 +1,8 @@
 /** @format */
 
-import { z } from "zod";
-import { env } from "~/env.mjs";
-import { createUser } from "~/features/authentication/services/register";
+import { z } from 'zod';
+import { env } from '~/env.mjs';
+import { createUser } from '~/features/authentication/services/register';
 import {
   deleteUser,
   getAllUsers,
@@ -10,15 +10,11 @@ import {
   getUserProfileByUseName,
   searchUser,
   updateUser,
-} from "~/features/user/services/CRUD";
-import { Main } from "~/features/user/types/GET";
+} from '~/features/user/services/CRUD';
+import { Main } from '~/features/user/types/GET';
 
-import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
-} from "~/server/api/trpc";
-import strapi from "~/utils/strapi";
+import { createTRPCRouter, publicProcedure, protectedProcedure } from '~/server/api/trpc';
+import strapi from '~/utils/strapi';
 
 export const userRouter = createTRPCRouter({
   getUserProile: protectedProcedure.query(async ({ ctx }) => {
@@ -26,16 +22,16 @@ export const userRouter = createTRPCRouter({
     // @ts-ignore
     return userData as Main;
   }),
-  getUserByUserName:protectedProcedure
-  .input(
-    z.object({
-       username:z.string()
-    })
-  )
-  .query(async ({ ctx, input }) => {
-    const userData = await getUserProfileByUseName(input.username);
-    return userData;
-  }),
+  getUserByUserName: protectedProcedure
+    .input(
+      z.object({
+        username: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userData = await getUserProfileByUseName(input.username);
+      return userData;
+    }),
   getUserByid: protectedProcedure
     .input(
       z.object({
@@ -63,7 +59,7 @@ export const userRouter = createTRPCRouter({
             year: z.date().optional(),
           })
           .optional(),
-          otp_verification_state:z.boolean().optional()
+        is_otp_verified: z.boolean().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {

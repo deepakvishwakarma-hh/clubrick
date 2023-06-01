@@ -6,6 +6,7 @@ import LoadingScreen from '../components/loading-screen';
 //
 import Login from '../pages/auth/login';
 import { useAuthContext } from './useAuthContext';
+import { useSession } from 'next-auth/react';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +15,8 @@ type AuthGuardProps = {
 };
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated, isInitialized } = useAuthContext();
+  const { data: isAuthenticated, status } = useSession();
+  // const { isAuthenticated, isInitialized } = useAuthContext();
 
   const { pathname, push } = useRouter();
 
@@ -29,7 +31,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }
   }, [isAuthenticated, pathname, push, requestedLocation]);
 
-  if (!isInitialized) {
+  if (status === 'loading') {
     return <LoadingScreen />;
   }
 
