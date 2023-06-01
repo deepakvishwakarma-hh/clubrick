@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 // next
 import NextLink from 'next/link';
 // form
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
@@ -17,11 +17,12 @@ import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { loginUserClientSide } from '~/features/authentication/services/login_user';
 import { truncate } from 'lodash';
+import { MuiTelInput } from 'mui-tel-input';
 
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
-  email: string;
+  phone: string;
   password: string;
   afterSubmit?: string;
 };
@@ -33,14 +34,13 @@ export default function AuthLoginForm() {
 
   const LoginSchema = Yup.object().shape({
     phone: Yup.string()
-    .required('Phone number is required')
-    .matches(/^91\d{10}$/, 'Phone number must start with 91 and have 10 digits')
-  ,
+      .required('Phone number is required')
+      .matches(/^\+91\s\d{5}\s\d{5}$/, 'Phone number must be in the format "+91 99101 22789"'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    phone: '91',
+    phone: '',
     password: '',
   };
 
@@ -53,20 +53,20 @@ export default function AuthLoginForm() {
     reset,
     setError,
     handleSubmit,
-    
-    formState: { errors, isSubmitting, isSubmitSuccessful,isSubmitted ,},
+    control,
+    formState: { errors, isSubmitting, isSubmitSuccessful, isSubmitted },
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
-    console.log(data)
+    console.log(data);
     // @ts-ignore
-     const res =  await loginUserClientSide({ identifier: data.phone, password: data.password })
-     if(res?.error){
+    const res = await loginUserClientSide({ identifier: data.phone, password: data.password });
+    if (res?.error) {
       // reset();
       setError('afterSubmit', {
-        message:  res.error,
+        message: res.error,
       });
-     }
+    }
   };
 
   return (
@@ -74,7 +74,22 @@ export default function AuthLoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="phone" label="Mobile Number" />
+        <Controller
+          name="phone"
+          control={control}
+          rules={{ required: 'Phone number is required' }}
+          render={({ field }) => (
+            <MuiTelInput
+              {...field}
+              disableDropdown
+              label="Phone Number"
+              placeholder="+91 987654321"
+              defaultCountry="IN"
+              error={!!errors.phone}
+              helperText={errors.phone ? errors.phone.message : null}
+            />
+          )}
+        />
 
         <RHFTextField
           name="password"
