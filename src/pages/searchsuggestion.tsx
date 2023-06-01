@@ -1,6 +1,6 @@
-import { Box, useTheme, IconButton, Input, Stack } from '@mui/material'
+import { Box, useTheme, IconButton, Input, Stack, TextField } from '@mui/material'
 import Iconify from '~/components/iconify/Iconify'
-import { Category2 } from '~/components/__new/home-search/CategoryItem'
+import { Category3, Category2 } from '~/components/__new/home-search/CategoryItem'
 import { useLocalStorage } from '@mantine/hooks';
 
 
@@ -53,6 +53,18 @@ export default function searchSuggetion() {
         }
     };
 
+    const handleGotoProduct = (name: string) => {
+        alert('handleGotoProduct()')
+        // push(PATH_DASHBOARD.eCommerce.view(paramCase(name)));
+    };
+
+
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleGotoProduct(searchProducts);
+            setRecentSearches(prev => [...prev, text] as any)
+        }
+    };
 
 
 
@@ -75,6 +87,9 @@ export default function searchSuggetion() {
 
 
 
+
+
+
     return (
         <>
 
@@ -84,34 +99,46 @@ export default function searchSuggetion() {
 
             <Box>
 
-                <Stack direction={'row'} py={1}
-                >
-                    <IconButton sx={{ px: 2 }} >
+                <Stack
+                    direction={'row'}
+                    sx={{ background: 'whitesmoke', p: 1 }}>
+
+                    <IconButton sx={{ px: 1 }} >
                         <Iconify width={25} icon="majesticons:arrow-left" />
                     </IconButton>
 
-                    <Input
+                    <TextField
 
+                        variant={"outlined"}
+                        size='small'
+                        onKeyUp={handleKeyUp}
                         onMouseEnter={handleFocus}
                         onMouseLeave={handleBlur}
 
                         onChange={handleChange}
-                        defaultValue={'shirt'}
-                        placeholder="Search goes here..." sx={{ flex: 1, }} />
+                        placeholder="Search goes here..." sx={{
+                            flex: 1,
+
+                            "& fieldset": { border: 'none' },
+                        }} />
                 </Stack>
 
 
 
-                <Box>
+                <Box mt={1}>
 
 
-                    {searchResults.categories.map((name) => <Category2 name={name.name} />)}
+                    {searchResults.categories.length == 0 && RecentSearches.map((name) => <Category3 name={name} />)}
+
+
+                    {searchResults.categories.map((res) => <Category2 name={res.name} />)}
+
 
 
                 </Box>
 
 
-            </Box>
+            </Box >
 
 
 
