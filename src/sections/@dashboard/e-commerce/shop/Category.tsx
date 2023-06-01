@@ -17,39 +17,41 @@ import Iconify from '../../../../components/iconify';
 import Label from '../../../../components/label';
 import Image from '../../../../components/image';
 import { ColorPreview } from '../../../../components/color-utils';
+import { Datum } from '~/features/types/categories';
 // ----------------------------------------------------------------------
 
 type Props = {
-    product: any;
+  product: any;
 };
 
-export default function CategoryCard({ name, href, cover }: any) {
+export default function CategoryCard({ attributes: { cover, name, href } }: Datum) {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
 
-    const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
+  return (
+    <Link component={NextLink} href={linkTo} color="inherit" variant="subtitle2" noWrap>
+      <Card
+        sx={{
+          '&:hover .add-cart-btn': {
+            opacity: 1,
+          },
+          cursor: 'pointer',
+        }}
+      >
+        <Box sx={{ position: 'relative', p: 1 }}>
+          <Image
+            alt={name}
+            src={cover?.data.attributes.url}
+            ratio="1/1"
+            sx={{ borderRadius: 1.5 }}
+          />
+        </Box>
 
-
-
-    return (
-        <Link component={NextLink} href={linkTo} color="inherit" variant="subtitle2" noWrap>
-            <Card
-                sx={{
-                    '&:hover .add-cart-btn': {
-                        opacity: 1,
-                    },
-                    cursor: 'pointer'
-                }}
-            >
-                <Box sx={{ position: 'relative', p: 1 }}>
-
-                    <Image alt={name} src={cover} ratio="1/1" sx={{ borderRadius: 1.5 }} />
-                </Box>
-
-                <Stack spacing={1} sx={{ px: 3, pb: 1, 'textTransform': 'capitalize' }}>
-                    {name} Store
-                </Stack>
-            </Card>
-        </Link>
-    );
+        <Stack spacing={1} sx={{ px: 3, pb: 1, textTransform: 'capitalize' }}>
+          {name} Store
+        </Stack>
+      </Card>
+    </Link>
+  );
 }

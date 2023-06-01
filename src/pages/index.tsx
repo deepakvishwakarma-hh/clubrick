@@ -2,17 +2,24 @@ import Head from 'next/head';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { CarouselAnimation } from '~/sections/_examples/extra/carousel';
 import useResponsive from '~/hooks/useResponsive';
-
 import LineCategoies from '~/components/__new/line-categoies';
 import ProductList from '~/components/__new/product-list-previewer';
 import { CategoryCard } from '~/sections/@dashboard/e-commerce/shop';
 import MainLayout from '../layouts/main';
 import AdsBoard from '~/components/__new/ad-board';
-import { Space } from '@mantine/core';
+import { api } from '~/utils/api';
+
+import strapi from '~/utils/strapi';
+import { Datum } from '~/features/types/carousel';
+import { s } from '@fullcalendar/core/internal-common';
+import { Datum as PDatum } from '~/features/types/categories';
 
 HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLayout>;
-
-export default function HomePage() {
+interface Props {
+  carouselData: Datum[];
+  popularCategories: PDatum[];
+}
+export default function HomePage({ carouselData, popularCategories }: Props) {
   const isDesktop = useResponsive('up', 'md');
 
   return (
@@ -20,7 +27,6 @@ export default function HomePage() {
       <Head>
         <title> The starting point for your next project | Minimal UI</title>
       </Head>
-
       {isDesktop && <LineCategoies />}
 
       <Box
@@ -30,7 +36,7 @@ export default function HomePage() {
           mt: 1,
         }}
       >
-        <CarouselAnimation data={carouselMockData} />
+        <CarouselAnimation data={carouselData} />
       </Box>
 
       <Container>
@@ -44,7 +50,7 @@ export default function HomePage() {
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
-          {categoryData.map((_, index) => (
+          {popularCategories.map((_, index) => (
             <Grid item xs={2} sm={4} md={2} key={index}>
               <CategoryCard {..._} />
             </Grid>
@@ -120,3 +126,16 @@ const categoryData = [
     href: '/',
   },
 ];
+
+export const getStaticProps = async () => {
+  let populate = '*';
+  const carouselData = await strapi.find('carousels', { populate });
+  const popularCategories = await strapi.find('popular-categories', { populate });
+  return {
+    props: {
+      carouselData: carouselData.data,
+      popularCategories: popularCategories.data,
+    },
+    revalidate: 60,
+  };
+};

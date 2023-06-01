@@ -9,16 +9,12 @@ import { bgGradient } from '../../../../utils/cssStyles';
 import Image from '../../../../components/image';
 import { MotionContainer, varFade } from '../../../../components/animate';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
+import { Datum } from '~/features/types/carousel';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  data: {
-    id: string;
-    title: string;
-    image: string;
-    description: string;
-  }[];
+  data: Datum[];
 };
 
 export default function CarouselAnimation({ data }: Props) {
@@ -68,22 +64,20 @@ export default function CarouselAnimation({ data }: Props) {
 // ----------------------------------------------------------------------
 
 type CarouselItemProps = {
-  item: {
-    title: string;
-    description: string;
-    image: string;
-  };
+  item: Datum;
   isActive: boolean;
 };
 
 function CarouselItem({ item, isActive }: CarouselItemProps) {
   const theme = useTheme();
 
-  const { image, title } = item;
-
+  const {
+    attributes: { title, href, description, cover },
+  } = item;
+  console.log(cover);
   return (
     <Paper sx={{ position: 'relative', height: '400px' }}>
-      <Image sx={{ height: '400px' }} alt={title} src={image} />
+      <Image sx={{ height: '400px' }} alt={title} src={cover?.data.attributes.url} />
 
       <Box
         sx={{
@@ -114,13 +108,13 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
       >
         <m.div variants={varFade().inRight}>
           <Typography variant="h3" gutterBottom>
-            {item.title}
+            {title}
           </Typography>
         </m.div>
 
         <m.div variants={varFade().inRight}>
           <Typography variant="body2" noWrap gutterBottom>
-            {item.description}
+            {description}
           </Typography>
         </m.div>
 
