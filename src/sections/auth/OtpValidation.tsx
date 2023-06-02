@@ -111,7 +111,7 @@ export default function OtpValidation() {
           let user = result.user;
           console.log(user);
           mutate({ is_otp_verified: true });
-          router.push('/home');
+          router.push('/');
           // ...
         })
         .catch((error: any) => {

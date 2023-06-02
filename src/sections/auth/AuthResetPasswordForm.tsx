@@ -10,6 +10,7 @@ import { LoadingButton } from '@mui/lab';
 import { PATH_AUTH } from '../../routes/paths';
 // components
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import strapi from '~/utils/strapi';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ export default function AuthResetPasswordForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
+      await strapi.forgotPassword({ email: data.email });
       await new Promise((resolve) => setTimeout(resolve, 500));
       sessionStorage.setItem('email-recovery', data.email);
       push(PATH_AUTH.newPassword);

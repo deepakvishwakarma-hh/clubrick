@@ -54,7 +54,7 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       signOut();
-      replace(PATH_AUTH.login);
+      // replace(PATH_AUTH.login);
       handleClosePopover();
     } catch (error) {
       console.error(error);
