@@ -13,15 +13,28 @@ import strapi from '~/utils/strapi';
 import { Datum } from '~/features/types/carousel';
 import { s } from '@fullcalendar/core/internal-common';
 import { Datum as PDatum } from '~/features/types/categories';
+import { Datum as AdsT } from '~/features/types/ads';
+import { Datum as MenuCategoryType } from '~/features/types/menu';
+import { MainDatum } from '~/features/types/categories-with-products';
 
 HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLayout>;
 interface Props {
   carouselData: Datum[];
   popularCategories: PDatum[];
+  ads: AdsT;
+  categoriesWithProducts: MainDatum[];
+  menuCategories: MenuCategoryType[];
 }
-export default function HomePage({ carouselData, popularCategories }: Props) {
+export default function HomePage({
+  carouselData,
+  popularCategories,
+  ads,
+  categoriesWithProducts,
+  menuCategories,
+}: Props) {
+  // Categories With Product & Ads Console  they all are arrays so map each of them
+  console.log(ads, categoriesWithProducts, menuCategories);
   const isDesktop = useResponsive('up', 'md');
-
   return (
     <>
       <Head>
@@ -131,10 +144,18 @@ export const getStaticProps = async () => {
   let populate = '*';
   const carouselData = await strapi.find('carousels', { populate });
   const popularCategories = await strapi.find('popular-categories', { populate });
+  const ads = await strapi.find('ad-boards', { populate: ['*', 'board', 'board.cover'] });
+  const categoriesWithProducts = await strapi.find('categories-with-products', {
+    populate: ['*', 'products', 'variants', 'variants.images'],
+  });
+  const menuCategories = await strapi.find('menu-categories');
   return {
     props: {
       carouselData: carouselData.data,
       popularCategories: popularCategories.data,
+      ads: ads.data,
+      categoriesWithProducts: categoriesWithProducts.data,
+      menuCategories: menuCategories.data,
     },
     revalidate: 60,
   };

@@ -3,8 +3,8 @@ import strapi from '~/utils/strapi';
 
 export default function test() {
   const getData = async () => {
-    const popularCategories = await strapi.find('popular-categories', { populate: '*' });
-    console.log(popularCategories.data);
+    const menuCategories = await strapi.find('menu-categories');
+    console.log(menuCategories.data);
   };
   return (
     <div>
