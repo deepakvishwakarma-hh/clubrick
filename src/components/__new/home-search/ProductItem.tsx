@@ -1,16 +1,18 @@
 import Image from "~/components/image/Image"
-import { Grid, Stack, Box, Typography, Chip } from "@mui/material"
+import { Grid, Stack, Box, Typography, Chip, useTheme } from "@mui/material"
 interface props {
     name: string
 }
 
 export default function Product({ name }: props) {
+    const theme = useTheme()
     return (
         <Grid
             item
             xs={12}
             md={5.9}
-            bgcolor={'whitesmoke'}
+            // bgcolor={'whitesmoke'}
+            bgcolor={theme.palette.mode == 'dark' ? theme.palette.grey[700] : theme.palette.grey[100]}
             sx={{
                 borderRadius: .5,
                 overflow: 'hidden',

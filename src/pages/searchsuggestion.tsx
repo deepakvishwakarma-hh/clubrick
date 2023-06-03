@@ -1,41 +1,18 @@
-import { Box, useTheme, IconButton, Input, Stack, TextField } from '@mui/material'
-import Iconify from '~/components/iconify/Iconify'
-import { Category3, Category2 } from '~/components/__new/home-search/CategoryItem'
-import { useLocalStorage } from '@mantine/hooks';
-
-
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useState, ChangeEvent } from 'react';
-
-
-
-
-
+import { useLocalStorage } from '@mantine/hooks';
+import Iconify from '~/components/iconify/Iconify'
+import { Box, IconButton, Stack, TextField, useTheme } from '@mui/material'
+import { Category3, Category2 } from '~/components/__new/home-search/CategoryItem'
 
 export default function searchSuggetion() {
-
-
+    const { push } = useRouter()
     const theme = useTheme()
-    const [isFocused, setFocus] = useState(false)
-    const [RecentSearches, setRecentSearches] = useLocalStorage({ key: 'search-history', defaultValue: [] })
     const [text, setText] = useState('')
     const [searchProducts, setSearchProducts] = useState('');
-    const [searchResults, setSearchResults] = useState({
-        categories: [] as any[],
-        products: [] as any[]
-    });
-
-
-
-
-
-
-
-
-
-    // handler
-
-
+    const [searchResults, setSearchResults] = useState([]);
+    const [RecentSearches, setRecentSearches] = useLocalStorage({ key: 'search-history', defaultValue: [] })
 
     const handleChangeSearch = async (value: string) => {
         try {
@@ -46,7 +23,7 @@ export default function searchSuggetion() {
                     params: { query: value },
                 });
 
-                setSearchResults(response.data);
+                setSearchResults(response.data.categories);
             }
         } catch (error) {
             console.error(error);
@@ -55,18 +32,15 @@ export default function searchSuggetion() {
 
     const handleGotoProduct = (name: string) => {
         alert('handleGotoProduct()')
-        // push(PATH_DASHBOARD.eCommerce.view(paramCase(name)));
     };
 
 
     const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             handleGotoProduct(searchProducts);
-            setRecentSearches(prev => [...prev, text] as any)
+            setRecentSearches(prev => [...new Set(prev) as any, text] as any)
         }
     };
-
-
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { value } } = event
@@ -77,74 +51,41 @@ export default function searchSuggetion() {
         }
     }
 
-    const handleFocus = () => {
-        setFocus(true)
-    }
-    const handleBlur = () => {
-        setFocus(false)
-
-    }
-
-
-
-
-
-
     return (
         <>
-
-
-
-
-
             <Box>
-
                 <Stack
                     direction={'row'}
-                    sx={{ background: 'whitesmoke', p: 1 }}>
+                    sx={{
+                        p: 1,
+                        background: theme.palette.mode == 'dark'
+                            ? theme.palette.grey[800]
+                            : theme.palette.grey[200],
+                    }}>
 
-                    <IconButton sx={{ px: 1 }} >
+                    <IconButton onClick={() => push('/')} sx={{ px: 1 }} >
                         <Iconify width={25} icon="majesticons:arrow-left" />
                     </IconButton>
 
                     <TextField
-
-                        variant={"outlined"}
+                        autoFocus
                         size='small'
+                        autoComplete="off"
+                        variant={"outlined"}
                         onKeyUp={handleKeyUp}
-                        onMouseEnter={handleFocus}
-                        onMouseLeave={handleBlur}
-
                         onChange={handleChange}
-                        placeholder="Search goes here..." sx={{
+                        placeholder="Search goes here..."
+                        sx={{
                             flex: 1,
-
                             "& fieldset": { border: 'none' },
                         }} />
                 </Stack>
 
-
-
                 <Box mt={1}>
-
-
-                    {searchResults.categories.length == 0 && RecentSearches.map((name) => <Category3 name={name} />)}
-
-
-                    {searchResults.categories.map((res) => <Category2 name={res.name} />)}
-
-
-
+                    {searchResults.length == 0 && RecentSearches.map((name) => <Category3 name={name} />)}
+                    {searchResults.map((res: any) => <Category2 name={res.name} />)}
                 </Box>
-
-
-            </Box >
-
-
-
-
-
-
+            </Box>
         </>
     )
 }

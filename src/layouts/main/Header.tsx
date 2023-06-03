@@ -36,9 +36,6 @@ export default function Header() {
   const isDesktop = useResponsive('up', 'md');
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
 
-
-
-
   return (
     <AppBar color="transparent" sx={{ boxShadow: 1, background: theme.palette.primary.main }}>
       <Toolbar
@@ -64,8 +61,9 @@ export default function Header() {
           <Sidebar isOffset={isOffset} data={[]} />
           <Logo sx={{ mr: 3 }} />
 
-          <Box sx={{ flexGrow: 1, background: '' }} />
-
+          <Box sx={{ flexGrow: 1, background: '' }} >
+            {isDesktop && <Search />}
+          </Box>
 
           <Stack
             spacing={1}
@@ -77,13 +75,10 @@ export default function Header() {
             }}
           >
 
-            {isDesktop && (
-              // <IconButton sx={{ color: 'white' }}>
-              //   <Iconify width={25} icon="mingcute:search-3-line" />
-              // </IconButton>
-
-              <Search />
-
+            {!isDesktop && (
+              <IconButton LinkComponent={Link} href='/searchsuggestion' sx={{ color: 'white' }}>
+                <Iconify width={25} icon="mingcute:search-3-line" />
+              </IconButton>
             )}
 
             <IconButton sx={{ color: 'white' }}>

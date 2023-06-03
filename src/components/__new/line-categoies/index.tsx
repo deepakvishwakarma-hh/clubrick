@@ -34,4 +34,3 @@ export default function LineCategoies({ categories }: Props) {
     </Container>
   );
 }
-

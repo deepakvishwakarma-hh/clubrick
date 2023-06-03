@@ -1,26 +1,24 @@
-import Category from "./CategoryItem"
+import axios from "axios"
 import Product from "./ProductItem"
+import Category from "./CategoryItem"
+import { useState, ChangeEvent } from "react"
+import RecentSearch from "./RecentSearchItem"
+import { useLocalStorage } from "@mantine/hooks"
 import Iconify from "~/components/iconify/Iconify"
 import { CustomInput, InputAdornment } from "./Input"
-import { Box, Grid, Paper, Typography, Button, Chip, useTheme, Stack, Input, IconButton } from "@mui/material"
-import { useState, useMemo, ChangeEvent } from "react"
-import axios from "axios"
-import { useLocalStorage } from "@mantine/hooks"
-import RecentSearch from "./RecentSearchItem"
-import useResponsive from "~/hooks/useResponsive"
+import { Box, Grid, Paper, Typography, Button, useTheme, Stack } from "@mui/material"
 
 
 export default function Search() {
     const theme = useTheme()
-    const isDesktop = useResponsive('up', 'md');
-    const [isFocused, setFocus] = useState(false)
-    const [RecentSearches, setRecentSearches] = useLocalStorage({ key: 'search-history', defaultValue: [] })
     const [text, setText] = useState('')
+    const [isFocused, setFocus] = useState(false)
     const [searchProducts, setSearchProducts] = useState('');
     const [searchResults, setSearchResults] = useState({
         categories: [] as any[],
         products: [] as any[]
     });
+    const [RecentSearches, setRecentSearches] = useLocalStorage({ key: 'search-history', defaultValue: [] })
 
 
     const handleChangeSearch = async (value: string) => {
@@ -41,13 +39,13 @@ export default function Search() {
 
     const handleGotoProduct = (name: string) => {
         alert('handleGotoProduct()')
-        // push(PATH_DASHBOARD.eCommerce.view(paramCase(name)));
     };
 
     const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             handleGotoProduct(searchProducts);
-            setRecentSearches(prev => [...prev, text] as any)
+            setRecentSearches(prev => [...new Set(prev) as any, text] as any)
+
         }
     };
 
@@ -74,19 +72,16 @@ export default function Search() {
 
     }
 
-
     const handleClearSearches = () => {
         setRecentSearches([])
     }
-
-
-
 
     return (
 
         <>
             <Box sx={{ position: 'relative', width: '100%' }}>
                 <CustomInput
+                    autoComplete="off"
                     sx={{ width: '500px', ml: 'auto' }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
@@ -121,7 +116,7 @@ export default function Search() {
                             pb: 2,
                             width: '100%',
                             overflow: 'hidden',
-                            background: 'white',
+                            // background: 'white',
                             position: 'absolute',
                             boxShadow: (t) => t.customShadows.dialog,
                         }}>
@@ -155,7 +150,7 @@ export default function Search() {
                             pb: 0,
                             width: '100%',
                             overflow: 'hidden',
-                            background: 'white',
+                            // background: 'white',
                             position: 'absolute',
                             boxShadow: (t) => t.customShadows.dialog,
                         }}>
@@ -198,8 +193,8 @@ export default function Search() {
                             sx={{
                                 flexDirection: 'row',
                                 justifyContent: 'left',
-                                background: theme.palette.grey[100],
-                                color: 'initial',
+                                background: theme.palette.mode == 'dark' ? theme.palette.grey[800] : theme.palette.grey[100],
+                                color: theme.palette.mode == 'dark' ? theme.palette.grey[400] : theme.palette.grey[800],
                                 ':hover': {
                                     color: theme.palette.primary.main
                                 }

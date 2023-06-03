@@ -14,11 +14,11 @@ export default function RecentSearch({ name }: category) {
             sx={{
                 p: 0,
                 py: 1,
-                color: 'black',
+                color: theme.palette.mode == 'dark' ? theme.palette.grey[400] : theme.palette.common.black,
                 flexDirection: 'row',
                 borderRadius: '1',
                 justifyContent: 'left',
-                background: theme.palette.grey[200],
+                background: theme.palette.mode == 'dark' ? theme.palette.grey[700] : theme.palette.grey[200],
                 ':hover': {
                     color: theme.palette.primary.main,
                     '& .iconify': {
@@ -40,6 +40,7 @@ export default function RecentSearch({ name }: category) {
                 textAlign="left"
                 variant="subtitle2"
                 textTransform="capitalize"
+
             >
                 {name}
             </Typography>
