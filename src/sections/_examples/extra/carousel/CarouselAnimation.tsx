@@ -10,6 +10,7 @@ import Image from '../../../../components/image';
 import { MotionContainer, varFade } from '../../../../components/animate';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
 import { Datum } from '~/features/types/carousel';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -18,10 +19,10 @@ type Props = {
 };
 
 export default function CarouselAnimation({ data }: Props) {
+
   const theme = useTheme();
-
+  const { push } = useRouter()
   const carouselRef = useRef<Carousel | null>(null);
-
   const [currentIndex, setCurrentIndex] = useState(theme.direction === 'rtl' ? data.length - 1 : 0);
 
   const carouselSettings = {
@@ -43,14 +44,17 @@ export default function CarouselAnimation({ data }: Props) {
     carouselRef.current?.slickNext();
   };
 
+  const handleClick = () => {
+    push('/')
+  }
+
   return (
-    <Card>
+    <Card onClick={handleClick}>
       <Carousel ref={carouselRef} {...carouselSettings}>
         {data.map((item, index) => (
           <CarouselItem key={item.id} item={item} isActive={index === currentIndex} />
         ))}
       </Carousel>
-
       <CarouselArrowIndex
         index={currentIndex}
         total={data.length}
@@ -74,7 +78,6 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
   const {
     attributes: { title, href, description, cover },
   } = item;
-  console.log(cover);
   return (
     <Paper sx={{ position: 'relative', height: '400px' }}>
       <Image sx={{ height: '400px' }} alt={title} src={cover?.data.attributes.url} />

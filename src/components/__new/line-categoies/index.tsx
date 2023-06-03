@@ -1,13 +1,24 @@
+import { type Datum } from '~/features/types/menu';
 import { Button, Box, useTheme, Container } from '@mui/material';
-export default function LineCategoies() {
+
+interface Props {
+  categories: Datum[]
+}
+
+export default function LineCategoies({ categories }: Props) {
   const theme = useTheme();
   return (
     <Container sx={{ mt: 9 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
-        {you_can_say_this_dummmy_data.map(({ name, href }, i) => (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-around'
+        }}>
+        {categories.map((category, i) => (
           <Button
             key={i}
-            href={href}
+            href={category.attributes.href}
             sx={{
               color: theme.palette.common.black,
               fontWeight: theme.typography.body2,
@@ -16,7 +27,7 @@ export default function LineCategoies() {
               },
             }}
           >
-            {name}
+            {category.attributes.name}
           </Button>
         ))}
       </Box>
@@ -24,15 +35,3 @@ export default function LineCategoies() {
   );
 }
 
-const you_can_say_this_dummmy_data = [
-  { name: 'Electronics', href: '/electronics' },
-  { name: 'Clothing', href: '/clothing' },
-  { name: 'Home Decor', href: '/home-decor' },
-  { name: 'Beauty & Personal Care', href: '/beauty-personal-care' },
-  { name: 'Books', href: '/books' },
-  { name: 'Sports & Fitness', href: '/sports-fitness' },
-  { name: 'Toys & Games', href: '/toys-games' },
-  { name: 'Health & Wellness', href: '/health-wellness' },
-  { name: 'Jewelry', href: '/jewelry' },
-  { name: 'Automotive', href: '/automotive' },
-];

@@ -28,16 +28,16 @@ import { useSession } from 'next-auth/react';
 import Search from '~/components/__new/home-search';
 
 import AccountPopover from '../dashboard/header/AccountPopover';
-import { useState } from 'react';
 
 export default function Header() {
   const { data: session } = useSession();
-  console.log({ session });
   const theme = useTheme();
   // const session = useSession();
   const isDesktop = useResponsive('up', 'md');
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
-  // const isUserAuthenticated = session.status === 'authenticated';
+
+
+
 
   return (
     <AppBar color="transparent" sx={{ boxShadow: 1, background: theme.palette.primary.main }}>
@@ -64,9 +64,7 @@ export default function Header() {
           <Sidebar isOffset={isOffset} data={[]} />
           <Logo sx={{ mr: 3 }} />
 
-          <Box sx={{ flexGrow: 1, background: '' }} >
-            {isDesktop && <Search />}
-          </Box>
+          <Box sx={{ flexGrow: 1, background: '' }} />
 
 
           <Stack

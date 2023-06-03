@@ -1,12 +1,15 @@
-import { Button, Grid, Typography } from '@mui/material';
-import { ShopProductCard } from '~/sections/@dashboard/e-commerce/shop';
-
 interface Props {
     name: string,
     paragraph?: string,
+    products: [],
+    href: string
 }
 
-export default function ProductList({ name, paragraph }: Props) {
+import Link from 'next/link';
+import { Button, Grid, Typography } from '@mui/material';
+import { ShopProductCard } from '~/sections/@dashboard/e-commerce/shop';
+
+export default function ProductList({ name, paragraph, products, href }: Props) {
     return (
         <Grid
             sx={{
@@ -21,14 +24,15 @@ export default function ProductList({ name, paragraph }: Props) {
             spacing={2}
         >
             <Grid item xs={12} sm={3} sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                <Typography sx={{ pt: 2 }} variant="h3" noWrap gutterBottom>
+                <Typography textTransform={"capitalize"} sx={{ pt: 2 }} variant="h3" noWrap gutterBottom>
                     {name}
                 </Typography>
 
-                <Typography sx={{ mb: 2 }} variant="body1" gutterBottom>
+                <Typography textTransform={"capitalize"} sx={{ mb: 2 }} variant="body1" gutterBottom>
                     {paragraph}
                 </Typography>
-                <Button sx={{ mt: 2 }} variant='soft'>
+
+                <Button LinkComponent={Link} href={href} sx={{ mt: 2 }} variant='soft'>
                     See all products
                 </Button>
             </Grid>

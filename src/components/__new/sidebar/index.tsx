@@ -1,36 +1,24 @@
 import { useState, useEffect } from 'react';
-// next
 import { useRouter } from 'next/router';
-// @mui
-import { Box, Stack } from '@mui/system';
-import { List, Drawer, IconButton, Typography, Button } from '@mui/material';
-// config
+import { Box } from '@mui/system';
 import { NAV } from '~/config-global';
-// components
-import Logo from '~/components/logo';
 import Iconify from '~/components/iconify';
 import Scrollbar from '~/components/scrollbar';
 import { NavSectionVertical } from '~/components/nav-section';
-// types
 import { NavProps } from '~/layouts/main/nav/types';
-// config
 import useResponsive from '~/hooks/useResponsive';
 import NAV_ITEMS, { mobileConfig } from './config-navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { List, Drawer, IconButton, Typography, Button } from '@mui/material';
 // ----------------------------------------------------------------------
 
 export default function Sidebar({ isOffset, data }: NavProps) {
-    const { pathname } = useRouter();
     const session = useSession()
+    const { pathname } = useRouter();
     const [open, setOpen] = useState(false);
     const isDesktop = useResponsive('up', 'md');
-
-
     const isUserAuthenticated = session.status === 'authenticated'
-
-    console.log(session)
-
 
     useEffect(() => {
         if (open) {
@@ -94,9 +82,6 @@ export default function Sidebar({ isOffset, data }: NavProps) {
                         </IconButton>
                     </Box>
 
-
-
-
                     <List component="nav" disablePadding>
                         <NavSectionVertical
                             data={isDesktop ? NAV_ITEMS : [mobileConfig, ...NAV_ITEMS,]}
@@ -114,5 +99,4 @@ export default function Sidebar({ isOffset, data }: NavProps) {
     );
 }
 
-// Presentation Data (place: development only)
 
