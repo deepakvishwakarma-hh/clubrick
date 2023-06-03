@@ -114,9 +114,7 @@ export default function DemoCarouselsPage() {
 
           <Card>
             <CardHeader title="Carousel Animation" />
-            <CardContent>
-              <CarouselAnimation data={_carouselsExample} />
-            </CardContent>
+            <CardContent>{/* <CarouselAnimation data={_carouselsExample} /> */}</CardContent>
           </Card>
         </Stack>
       </Container>

@@ -1,17 +1,13 @@
 /** @format */
 
-import { type GetServerSidePropsContext } from "next";
-import {
-  getServerSession,
-  type NextAuthOptions,
-  type DefaultSession,
-} from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { type GetServerSidePropsContext } from 'next';
+import { getServerSession, type NextAuthOptions, type DefaultSession } from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 // import { env } from "~/env.mjs";
-import { prisma } from "~/server/db";
+import { prisma } from '~/server/db';
 
-import { loginUserBackend } from "~/features/authentication/services/login_user";
+import { loginUserBackend } from '~/features/authentication/services/login_user';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -19,7 +15,7 @@ import { loginUserBackend } from "~/features/authentication/services/login_user"
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: number;
@@ -27,10 +23,10 @@ declare module "next-auth" {
       birthday: Date;
       jwt: string | null | undefined;
       username: string;
-      otp_verification_state:boolean
+      is_otp_verified: boolean;
       // ...other properties
       // role: UserRole;
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
   }
 
   interface User {
@@ -38,7 +34,7 @@ declare module "next-auth" {
     birthday: Date;
     username: string;
     jwt: string;
-    otp_verification_state: boolean;
+    is_otp_verified: boolean;
     // ...other properties
     // role: UserRole;
   }
@@ -65,7 +61,7 @@ export const authOptions: NextAuthOptions = {
         token.avatar = user.image;
         token.jwt = user.jwt;
         token.user = user;
-        token.otp_verification_state = user.otp_verification_state;
+        token.otp_verification_state = user.is_otp_verified;
         return token;
       }
       return token;
@@ -78,23 +74,22 @@ export const authOptions: NextAuthOptions = {
       session.user.country = token.country as string;
       session.user.image = token.avatar as string;
       session.user.jwt = token.jwt as string;
-      session.user.username = token.username as string
-      session.user.otp_verification_state = token.otp_verification_state as boolean;
+      session.user.username = token.username as string;
+      session.user.is_otp_verified = token.is_otp_verified as boolean;
       return session;
     },
-   
   },
   adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
         identifier: {
-          label: "Identifier",
-          type: "string",
-          placeholder: "example@example.com or example",
+          label: 'Identifier',
+          type: 'string',
+          placeholder: 'example@example.com or example',
         },
-        password: { label: "Password", type: "password" },
+        password: { label: 'Password', type: 'password' },
       },
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
@@ -121,11 +116,11 @@ export const authOptions: NextAuthOptions = {
   ],
 
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   pages: {
-    signIn: "/auth/login",
-    newUser: "/register",
+    signIn: '/auth/login',
+    newUser: '/register',
   },
 
   jwt: {
@@ -140,8 +135,8 @@ export const authOptions: NextAuthOptions = {
  * @see https://next-auth.js.org/configuration/nextjs
  */
 export const getServerAuthSession = (ctx: {
-  req: GetServerSidePropsContext["req"];
-  res: GetServerSidePropsContext["res"];
+  req: GetServerSidePropsContext['req'];
+  res: GetServerSidePropsContext['res'];
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };

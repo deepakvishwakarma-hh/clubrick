@@ -3,7 +3,7 @@ import { api } from '~/utils/api';
 import { useState } from 'react';
 import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Stack, IconButton, InputAdornment, Alert, TextField } from '@mui/material';
@@ -19,6 +19,8 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 // firebase
 import { useRouter } from 'next/router';
 import { createUser } from '~/features/authentication/services/register';
+import { MuiTelInput } from 'mui-tel-input';
+import convertPhoneNumber from '~/utils/extractNumber';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +36,7 @@ type FormValuesProps = {
 export default function AuthRegisterForm() {
   const router = useRouter();
   const { mutate } = api.auth.register.useMutation();
-  const { register } = useAuthContext();
+  // const { register } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
@@ -43,7 +45,7 @@ export default function AuthRegisterForm() {
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     phone: Yup.string()
       .required('Phone number is required')
-      .matches(/^91\d{10}$/, 'Phone number must start with 91 and have 10 digits'),
+      .matches(/^\+91\s\d{5}\s\d{5}$/, 'Phone number must be in the format "+91 99101 22789"'),
     password: Yup.string().required('Password is required'),
   });
 
@@ -52,7 +54,7 @@ export default function AuthRegisterForm() {
     lastName: '',
     email: '',
     password: '',
-    phone: '91',
+    phone: '',
   };
 
   const methods = useForm<FormValuesProps>({
@@ -64,27 +66,38 @@ export default function AuthRegisterForm() {
     reset,
     setError,
     handleSubmit,
+    setValue,
+    register,
+    control,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
+      // console.log(data);
       // let resp = await createUser(data);
+      // console.log(resp);
       // loginUserClientSide({
       //   identifier: data.email as string,
       //   password: data.password,
       //   path: `${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`,
       // });
-      //
       mutate(data, {
         onError(error: any) {
+          reset();
+          setError('afterSubmit', {
+            ...error,
+            message: error.message || error,
+          });
           console.error('Mutation failed:', error?.message);
         },
         onSuccess(data1: any) {
           loginUserClientSide({
             identifier: data1.user.email as string,
             password: data1.password,
-            path: `${router.pathname}/?otpValidation=true&mobileNumber=${data.phone}`,
+            path: `${router.pathname}/?otpValidation=true&mobileNumber=${convertPhoneNumber(
+              data.phone
+            )}`,
           });
         },
       });
@@ -107,8 +120,23 @@ export default function AuthRegisterForm() {
           <RHFTextField name="firstName" label="First name" />
           <RHFTextField name="lastName" label="Last name" />
         </Stack>
-
-        <RHFTextField type="number" name="phone" label="Phone Number" placeholder="+91 987654321" />
+        <Controller
+          name="phone"
+          control={control}
+          rules={{ required: 'Phone number is required' }}
+          render={({ field }) => (
+            <MuiTelInput
+              {...field}
+              disableDropdown
+              label="Phone Number"
+              placeholder="+91 987654321"
+              defaultCountry="IN"
+              error={!!errors.phone}
+              helperText={errors.phone ? errors.phone.message : null}
+            />
+          )}
+        />
+        {/* <RHFTextField type="number" name="phone" label="Phone Number" placeholder="+91 987654321" /> */}
         <RHFTextField type="email" name="email" label="Email" placeholder="example@gmail.com" />
 
         {/* <TextField
