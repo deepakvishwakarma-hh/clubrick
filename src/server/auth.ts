@@ -24,6 +24,7 @@ declare module 'next-auth' {
       jwt: string | null | undefined;
       username: string;
       is_otp_verified: boolean;
+      firstname: string;
       // ...other properties
       // role: UserRole;
     } & DefaultSession['user'];
@@ -35,6 +36,7 @@ declare module 'next-auth' {
     username: string;
     jwt: string;
     is_otp_verified: boolean;
+    firstname: string;
     // ...other properties
     // role: UserRole;
   }
@@ -62,6 +64,7 @@ export const authOptions: NextAuthOptions = {
         token.jwt = user.jwt;
         token.user = user;
         token.otp_verification_state = user.is_otp_verified;
+        token.firstname = user.firstname;
         return token;
       }
       return token;
@@ -76,6 +79,7 @@ export const authOptions: NextAuthOptions = {
       session.user.jwt = token.jwt as string;
       session.user.username = token.username as string;
       session.user.is_otp_verified = token.is_otp_verified as boolean;
+      session.user.firstname = token.firstname as string;
       return session;
     },
   },

@@ -61,9 +61,7 @@ export default function Header() {
           <Sidebar isOffset={isOffset} data={[]} />
           <Logo sx={{ mr: 3 }} />
 
-          <Box sx={{ flexGrow: 1, background: '' }} >
-            {isDesktop && <Search />}
-          </Box>
+          <Box sx={{ flexGrow: 1, background: '' }}>{isDesktop && <Search />}</Box>
 
           <Stack
             spacing={1}
@@ -74,19 +72,18 @@ export default function Header() {
               mx: { xs: 2, md: 2 },
             }}
           >
-
             {!isDesktop && (
-              <IconButton LinkComponent={Link} href='/searchsuggestion' sx={{ color: 'white' }}>
+              <IconButton LinkComponent={Link} href="/searchsuggestion" sx={{ color: 'white' }}>
                 <Iconify width={25} icon="mingcute:search-3-line" />
               </IconButton>
             )}
 
-            <IconButton LinkComponent={Link} href='/cheakout' sx={{ color: 'white' }}>
+            <IconButton LinkComponent={Link} href="/cheakout" sx={{ color: 'white' }}>
               <Iconify width={25} icon="ph:shopping-cart-simple-bold" />
             </IconButton>
           </Stack>
 
-          {session ? (
+          {session?.user ? (
             isDesktop && <AccountPopover />
           ) : (
             <Button

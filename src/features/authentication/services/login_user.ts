@@ -1,25 +1,25 @@
-import axios from "axios";
-import { signIn } from "next-auth/react";
-import Router from "next/router";
-import strapi from "~/utils/strapi";
+import axios from 'axios';
+import { signIn } from 'next-auth/react';
+import Router from 'next/router';
+import strapi from '~/utils/strapi';
 interface type {
   identifier: string;
   password: string;
   path?: string;
 }
 const loginUserClientSide = async ({ identifier, password, path }: type) => {
-  const res = await signIn("credentials", {
+  const res = await signIn('credentials', {
     identifier: identifier,
     password: password,
 
     redirect: false,
-    callbackUrl: "/",
+    callbackUrl: '/',
   });
   if (res?.error) {
-    return {error: res.error}
+    return { error: res.error };
     // console.log(res.error);
   } else {
-    void Router.push(`${path ? path : "/home"}`);
+    void Router.push(`${path ? path : '/'}`);
   }
   return res;
 };
