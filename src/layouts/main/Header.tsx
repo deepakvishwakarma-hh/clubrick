@@ -71,7 +71,7 @@ export default function Header() {
             justifyContent={{ xs: 'center', md: 'flex-start' }}
             sx={{
               mt: 0,
-              mr: { xs: 2, md: 2 },
+              mx: { xs: 2, md: 2 },
             }}
           >
 
