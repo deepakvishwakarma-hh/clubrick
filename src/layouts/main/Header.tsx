@@ -81,7 +81,7 @@ export default function Header() {
               </IconButton>
             )}
 
-            <IconButton sx={{ color: 'white' }}>
+            <IconButton LinkComponent={Link} href='/cheakout' sx={{ color: 'white' }}>
               <Iconify width={25} icon="ph:shopping-cart-simple-bold" />
             </IconButton>
           </Stack>
