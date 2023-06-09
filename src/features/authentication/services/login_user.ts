@@ -30,7 +30,9 @@ const loginUserBackend = async ({ identifier, password }: type) => {
       identifier,
       password,
     });
+    strapi.user = user;
     user.jwt = jwt;
+
     return user;
   } catch (e: any) {
     console.log(e);
